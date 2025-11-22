@@ -1,570 +1,723 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS | Future Tech Blog</title>
+    <title>烧猪🐷 | 个人主页</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --neon-cyan: #00f3ff;
-            --neon-purple: #bc13fe;
-            --dark-bg: #050505;
-            --card-bg: rgba(20, 20, 30, 0.7);
+            --primary-color: #6366f1; /* Indigo */
+            --secondary-color: #a855f7; /* Purple */
+            --accent-color: #ec4899; /* Pink */
+            --bg-dark: #0f172a;
         }
-        
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--dark-bg);
-            color: #e2e8f0;
+            margin: 0;
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f8fafc;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
-
-        h1, h2, h3, h4, h5, h6, .tech-font {
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--neon-cyan);
-        }
-
-        /* Background Animation */
-        #canvas-container {
+        /* --- Background Effects --- */
+        .bg-cosmos {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f172a 100%);
+            z-index: -2;
+        }
+        
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+            opacity: 0.5;
+            pointer-events: none;
         }
-
-        /* Neon Glow Effects */
-        .text-glow {
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5);
-        }
-        .border-glow {
-            box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
-        }
-        
-        /* Glassmorphism Card */
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s ease;
-        }
-        
-        .glass-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-        }
-
-        /* Glitch Effect for Logo */
-        .glitch {
+        /* --- Glassmorphism --- */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
             position: relative;
-            color: white;
         }
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
+        
+        .glass-panel::before {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark-bg);
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
         }
-        .glitch::before {
-            left: 2px;
-            text-shadow: -1px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
+        .glass-panel:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.3);
         }
-        .glitch::after {
-            left: -2px;
-            text-shadow: -1px 0 #00fff9;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        
+        .glass-panel:hover::before {
+            left: 100%;
         }
-        @keyframes glitch-anim {
-            0% { clip: rect(34px, 9999px, 11px, 0); }
-            20% { clip: rect(68px, 9999px, 89px, 0); }
-            40% { clip: rect(15px, 9999px, 98px, 0); }
-            60% { clip: rect(2px, 9999px, 23px, 0); }
-            80% { clip: rect(55px, 9999px, 14px, 0); }
-            100% { clip: rect(84px, 9999px, 76px, 0); }
-        }
-        @keyframes glitch-anim2 {
-            0% { clip: rect(63px, 9999px, 68px, 0); }
-            20% { clip: rect(19px, 9999px, 5px, 0); }
-            40% { clip: rect(48px, 9999px, 78px, 0); }
-            60% { clip: rect(94px, 9999px, 1px, 0); }
-            80% { clip: rect(3px, 9999px, 35px, 0); }
-            100% { clip: rect(26px, 9999px, 93px, 0); }
-        }
-
-        /* Typing Cursor */
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s step-start infinite;
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        /* Reveal on Scroll */
-        .reveal {
+        /* --- Scroll Animations --- */
+        .scroll-hidden {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .reveal.active {
+        
+        .scroll-visible {
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Angled Button */
-        .clip-path-polygon {
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        /* --- Typewriter Effect Cursor --- */
+        .typewriter-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+            margin-left: 2px;
+            color: var(--accent-color);
         }
-
-        /* Typewriter Effect */
-        .typewriter {
-            overflow: hidden;
-            border-right: 2px solid var(--neon-cyan);
-            white-space: nowrap;
-            margin: 0 auto;
-            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
-
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
+        /* --- Woodfish Animation --- */
+        @keyframes woodfish-scale {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
         }
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: var(--neon-cyan); }
+        .woodfish-click {
+            animation: woodfish-scale 0.1s ease-out;
+        }
+        
+        .merit-plus {
+            position: absolute;
+            color: #fbbf24;
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatUpFade 1s ease-out forwards;
+            z-index: 50;
+        }
+        @keyframes floatUpFade {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+        /* --- Layout Utilities --- */
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0;
+            width: 40px; height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        /* --- Neon Glow Text --- */
+        .neon-text {
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+        /* --- 烧猪头像影子映射 --- */
+        .pig-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.7), 0 0 40px rgba(251, 191, 36, 0.5), 0 0 60px rgba(251, 191, 36, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
-<body class="antialiased selection:bg-cyan-500 selection:text-black">
-
-    <!-- Dynamic Background -->
-    <div id="canvas-container">
-        <canvas id="starfield"></canvas>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 top-0 left-0 border-b border-white/10 backdrop-blur-md bg-black/50 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0">
-                    <a href="#" class="text-2xl font-bold tech-font tracking-widest glitch" data-text="NEXUS">NEXUS</a>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#home" class="text-gray-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group">
-                            <span>HOME</span>
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#articles" class="text-gray-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group">
-                            <span>ARTICLES</span>
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#about" class="text-gray-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group">
-                            <span>ABOUT</span>
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#contact" class="text-gray-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group">
-                            <span>CONTACT</span>
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="-mr-2 flex md:hidden">
-                    <button type="button" class="text-gray-400 hover:text-white focus:outline-none" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                        <span class="sr-only">Open main menu</span>
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
+<body class="antialiased selection:bg-indigo-500/30">
+    <!-- Backgrounds -->
+    <div class="bg-cosmos"></div>
+    <canvas id="particles-canvas"></canvas>
+    <!-- Main Container -->
+    <div class="max-w-5xl mx-auto px-6 py-12 md:py-20 relative z-10 flex flex-col gap-16">
+        <!-- HERO Section -->
+        <header class="text-center flex flex-col items-center justify-center min-h-[40vh] scroll-hidden">
+            <div class="relative group mb-6">
+                <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white/10 shadow-2xl bg-slate-800 flex items-center justify-center">
+                    <!-- 替换为烧猪🐷影子映射 -->
+                    <div class="pig-avatar">烧猪🐷</div>
                 </div>
             </div>
-        </div>
-        <!-- Mobile menu -->
-        <div class="hidden md:hidden bg-black/90 border-b border-white/10" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="text-gray-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">HOME</a>
-                <a href="#articles" class="text-gray-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">ARTICLES</a>
-                <a href="#about" class="text-gray-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">ABOUT</a>
-                <a href="#contact" class="text-gray-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">CONTACT</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="relative h-screen flex items-center justify-center pt-20 overflow-hidden">
-        <!-- Decorative Elements -->
-        <div class="absolute top-1/4 left-10 w-24 h-24 border-l-2 border-t-2 border-cyan-500/30 rounded-tl-3xl"></div>
-        <div class="absolute bottom-1/4 right-10 w-24 h-24 border-r-2 border-b-2 border-purple-500/30 rounded-br-3xl"></div>
-        
-        <div class="text-center z-10 px-4 max-w-4xl">
-            <div class="mb-4 inline-block px-4 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs tracking-widest uppercase tech-font reveal">
-                <span class="typewriter block">System Online v2.0.4</span>
-            </div>
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight reveal" style="transition-delay: 100ms;">
-                <span class="block text-white">DECODING THE</span>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 text-glow">FUTURE</span>
+            
+            <h1 class="text-6xl md:text-8xl font-black text-white mb-4 tracking-tighter drop-shadow-2xl">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-white to-purple-300">烧猪🐷</span>
             </h1>
-            <p class="text-gray-400 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed reveal" style="transition-delay: 200ms;">
-                Exploring the digital frontier where <span class="text-cyan-300">artificial intelligence</span>, <span class="text-purple-300">cybernetics</span>, and <span class="text-blue-300">human consciousness</span> converge.
-            </p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center reveal" style="transition-delay: 300ms;">
-                <a href="#articles" class="px-8 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-sm tech-font tracking-wider transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] clip-path-polygon">
-                    START READING
-                </a>
-                <a href="#about" class="px-8 py-4 bg-transparent border border-white/20 hover:border-purple-500 hover:text-purple-400 text-gray-300 font-bold rounded-sm tech-font tracking-wider transition-all">
-                    ACCESS DATA
-                </a>
+            <div class="h-8 flex items-center justify-center">
+                <p class="text-slate-400 text-lg md:text-xl font-light type-target" data-text="别看了，就一个废柴普通初中生"></p>
             </div>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <a href="#articles" class="text-gray-500 hover:text-cyan-400 transition-colors">
-                <i class="fas fa-chevron-down text-2xl"></i>
-            </a>
-        </div>
-    </section>
-
-    <!-- Articles Section -->
-    <section id="articles" class="py-20 px-4 md:px-8 relative">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex items-center justify-between mb-12 reveal">
-                <h2 class="text-3xl md:text-4xl font-bold text-white border-l-4 border-cyan-500 pl-4">
-                    LATEST <span class="text-cyan-400">TRANSMISSIONS</span>
-                </h2>
-                <div class="hidden md:block h-px bg-white/10 flex-grow ml-8"></div>
-                <div class="hidden md:block text-cyan-500/50 tech-font text-sm ml-4">LOG_ID: 8842</div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Article 1 -->
-                <article class="glass-card rounded-xl overflow-hidden reveal group">
-                    <div class="relative h-48 bg-gray-800 overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1535378437268-13d143c02846?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="AI Consciousness" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100">
-                        <div class="absolute top-4 left-4 z-20 bg-black/70 backdrop-blur-sm px-3 py-1 border border-cyan-500/30 rounded text-xs text-cyan-400 font-mono">
-                            AI / ETHICS
-                        </div>
+        </header>
+        <!-- 1. INFO Section -->
+        <section class="scroll-hidden">
+            <h2 class="text-2xl md:text-3xl section-title">个人档案</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Age/Status -->
+                <div class="glass-panel p-6 flex items-center gap-4 group">
+                    <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl group-hover:scale-110 transition-transform">
+                        <<i class="fas fa-user-astronaut"></</i>
                     </div>
-                    <div class="p-6 relative">
-                        <div class="absolute -top-10 right-6 z-20 w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center border border-white/10 group-hover:border-cyan-500 transition-colors shadow-lg">
-                            <i class="fas fa-microchip text-cyan-400"></i>
-                        </div>
-                        <div class="text-gray-500 text-xs mb-2 font-mono">DATE: 2084.11.02</div>
-                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">The Ghost in the Machine</h3>
-                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
-                            Analyzing the emergent properties of neural networks when they exceed the critical complexity threshold. Are we building tools or birthing gods?
-                        </p>
-                        <a href="#" class="inline-flex items-center text-cyan-400 text-sm font-bold hover:text-purple-400 transition-colors">
-                            READ DATA <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- Article 2 -->
-                <article class="glass-card rounded-xl overflow-hidden reveal group" style="transition-delay: 100ms;">
-                    <div class="relative h-48 bg-gray-800 overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1515630278258-407f66498911?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Cybernetics" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100">
-                        <div class="absolute top-4 left-4 z-20 bg-black/70 backdrop-blur-sm px-3 py-1 border border-purple-500/30 rounded text-xs text-purple-400 font-mono">
-                            CYBERNETICS
-                        </div>
-                    </div>
-                    <div class="p-6 relative">
-                        <div class="absolute -top-10 right-6 z-20 w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center border border-white/10 group-hover:border-purple-500 transition-colors shadow-lg">
-                            <i class="fas fa-hand-sparkles text-purple-400"></i>
-                        </div>
-                        <div class="text-gray-500 text-xs mb-2 font-mono">DATE: 2084.10.24</div>
-                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">Beyond Flesh and Bone</h3>
-                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
-                            The latest advancements in neural interfaces allow for seamless integration between biological synapses and silicon chips. The era of homo-technologicus is here.
-                        </p>
-                        <a href="#" class="inline-flex items-center text-purple-400 text-sm font-bold hover:text-cyan-400 transition-colors">
-                            READ DATA <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- Article 3 -->
-                <article class="glass-card rounded-xl overflow-hidden reveal group" style="transition-delay: 200ms;">
-                    <div class="relative h-48 bg-gray-800 overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Space Tech" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100">
-                        <div class="absolute top-4 left-4 z-20 bg-black/70 backdrop-blur-sm px-3 py-1 border border-cyan-500/30 rounded text-xs text-cyan-400 font-mono">
-                            SPACE
-                        </div>
-                    </div>
-                    <div class="p-6 relative">
-                        <div class="absolute -top-10 right-6 z-20 w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center border border-white/10 group-hover:border-cyan-500 transition-colors shadow-lg">
-                            <i class="fas fa-satellite text-cyan-400"></i>
-                        </div>
-                        <div class="text-gray-500 text-xs mb-2 font-mono">DATE: 2084.10.15</div>
-                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">Terraforming Mars</h3>
-                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
-                            Atmospheric processors have finally stabilized the Red Planet's climate. Here's what the first generation of Martian colonists can expect.
-                        </p>
-                        <a href="#" class="inline-flex items-center text-cyan-400 text-sm font-bold hover:text-purple-400 transition-colors">
-                            READ DATA <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
-                        </a>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 px-4 md:px-8 relative bg-black/40">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                <div class="reveal">
-                    <div class="flex items-center mb-6">
-                        <span class="text-cyan-500 text-4xl mr-4"><i class="fas fa-fingerprint"></i></span>
-                        <h2 class="text-3xl md:text-4xl font-bold text-white">
-                            AUTHOR <span class="text-purple-500">PROFILE</span>
-                        </h2>
-                    </div>
-                    <p class="text-gray-300 text-lg mb-6 leading-relaxed">
-                        I am a digital archivist and technologist obsessed with the singularity. My work documents the rapid evolution of human-machine interfaces and the ethical dilemmas of our post-biological future.
-                    </p>
-                    <p class="text-gray-400 mb-8">
-                        Operating from Node 42 of the decentralized web, I curate data streams that matter. Whether it's quantum computing breakthroughs or the sociology of virtual worlds, you'll find it decoded here.
-                    </p>
-                    
-                    <!-- Stats/Skills -->
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="text-cyan-400 text-sm font-mono tracking-widest">CYBERSECURITY</span>
-                                <span class="text-white text-sm font-mono">98%</span>
-                            </div>
-                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 w-[98%]"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="text-purple-400 text-sm font-mono tracking-widest">AI INTEGRATION</span>
-                                <span class="text-white text-sm font-mono">85%</span>
-                            </div>
-                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 w-[85%]"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="text-blue-400 text-sm font-mono tracking-widest">DATA SYNTHESIS</span>
-                                <span class="text-white text-sm font-mono">92%</span>
-                            </div>
-                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 w-[92%]"></div>
-                            </div>
-                        </div>
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Age</p>
+                        <p class="text-xl font-bold text-white">14岁 <span class="text-sm font-normal text-slate-400">/ 初中生</span></p>
                     </div>
                 </div>
                 
-                <div class="relative reveal" style="transition-delay: 200ms;">
-                    <!-- Profile Image Container with Glitch Border -->
-                    <div class="relative border border-white/20 p-2 rounded-sm">
-                        <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-500"></div>
-                        <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-purple-500"></div>
-                        <div class="absolute top-1/2 -left-2 w-1 h-10 bg-cyan-500/50"></div>
-                        
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Profile" class="w-full h-auto grayscale hover:grayscale-0 transition-all duration-500">
-                        
-                        <!-- Holographic Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-cyan-500/20 to-transparent opacity-30 pointer-events-none"></div>
-                        <div class="absolute bottom-0 left-0 w-full h-1 bg-cyan-500/50 shadow-[0_0_10px_rgba(0,243,255,0.8)] animate-pulse"></div>
+                <!-- Location -->
+                <div class="glass-panel p-6 flex items-center gap-4 group">
+                    <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl group-hover:scale-110 transition-transform">
+                        <<i class="fas fa-map-marker-alt"></</i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Location</p>
+                        <p class="text-xl font-bold text-white">中国 <span class="text-sm font-normal text-slate-400">/ 地球online</span></p>
+                    </div>
+                </div>
+                <!-- Status -->
+                <div class="glass-panel p-6 flex items-center gap-4 group">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 text-xl group-hover:scale-110 transition-transform">
+                        <<i class="fas fa-battery-full"></</i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Status</p>
+                        <p class="text-xl font-bold text-white">躺平 <span class="text-sm font-normal text-slate-400">/ 摸鱼中</span></p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 px-4 md:px-8 relative">
-        <div class="max-w-3xl mx-auto text-center mb-12 reveal">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                INITIATE <span class="text-cyan-400">COMMUNICATION</span>
-            </h2>
-            <p class="text-gray-400">Encrypted channel secure. Transmission ready.</p>
-        </div>
-
-        <div class="max-w-4xl mx-auto glass-card p-8 md:p-12 rounded-2xl reveal">
-            <form class="space-y-6" onsubmit="event.preventDefault();">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="relative group">
-                        <input type="text" id="name" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 rounded focus:outline-none focus:border-cyan-500 transition-colors peer" placeholder=" ">
-                        <label for="name" class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-6 peer-focus:text-cyan-400 peer-focus:text-xs peer-not-placeholder-shown:-top-6 peer-not-placeholder-shown:text-cyan-400 peer-not-placeholder-shown:text-xs pointer-events-none">CODENAME</label>
-                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 peer-focus:w-full"></div>
+        </section>
+        <!-- 2. SOCIAL Section -->
+        <section class="scroll-hidden">
+            <h2 class="text-2xl md:text-3xl section-title">社交链接</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- QQ Card -->
+                <div class="glass-panel p-0 group cursor-pointer relative" onclick="copyQQ()">
+                    <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400">
+                        <<i class="far fa-clone"></</i>
                     </div>
-                    <div class="relative group">
-                        <input type="email" id="email" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 rounded focus:outline-none focus:border-cyan-500 transition-colors peer" placeholder=" ">
-                        <label for="email" class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-6 peer-focus:text-cyan-400 peer-focus:text-xs peer-not-placeholder-shown:-top-6 peer-not-placeholder-shown:text-cyan-400 peer-not-placeholder-shown:text-xs pointer-events-none">FREQUENCY (EMAIL)</label>
-                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 peer-focus:w-full"></div>
+                    <div class="p-6 flex items-center gap-5">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white text-3xl shadow-lg shadow-blue-500/25 group-hover:rotate-6 transition-transform duration-300">
+                            <<i class="fab fa-qq"></</i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-white mb-1">QQ</h3>
+                            <p class="text-slate-400 font-mono tracking-wide" id="qq-num">259773138</p>
+                            <div class="mt-2 text-xs text-blue-400 bg-blue-400/10 inline-block px-2 py-1 rounded border border-blue-400/20">
+                                点击复制号码
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Success Feedback -->
+                    <div id="copy-overlay" class="absolute inset-0 bg-blue-600/90 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+                        <p class="text-white font-bold text-lg flex items-center gap-2"><<i class="fas fa-check-circle"></</i> 已复制!</p>
                     </div>
                 </div>
-                <div class="relative group">
-                    <textarea id="message" rows="4" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 rounded focus:outline-none focus:border-cyan-500 transition-colors peer" placeholder=" "></textarea>
-                    <label for="message" class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-6 peer-focus:text-cyan-400 peer-focus:text-xs peer-not-placeholder-shown:-top-6 peer-not-placeholder-shown:text-cyan-400 peer-not-placeholder-shown:text-xs pointer-events-none">TRANSMISSION DATA</label>
-                    <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 peer-focus:w-full"></div>
-                </div>
-                <div class="text-right">
-                    <button type="submit" class="bg-cyan-600/80 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-sm tech-font tracking-widest transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] flex items-center ml-auto group">
-                        SEND PACKET <i class="fas fa-paper-plane ml-3 group-hover:translate-x-1 transition-transform"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="border-t border-white/10 bg-black py-10">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-6 md:mb-0 text-center md:text-left">
-                <a href="#" class="text-2xl font-bold tech-font tracking-widest text-white mb-2 block">NEXUS</a>
-                <p class="text-gray-500 text-sm">© 2084 NEXUS Digital Frontier. All systems nominal.</p>
+                <!-- Kuaishou Card -->
+                <a href="https://v.kuaishou.com/profile/djq110723" target="_blank" class="glass-panel p-6 flex items-center gap-5 group cursor-pointer hover:bg-orange-500/5 transition-colors">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-white text-3xl shadow-lg shadow-orange-500/25 group-hover:-rotate-6 transition-transform duration-300">
+                        <<i class="fas fa-video"></</i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-white mb-1">快手主页</h3>
+                        <p class="text-slate-400 font-mono tracking-wide">djq110723</p>
+                        <div class="mt-2 text-xs text-orange-400 bg-orange-400/10 inline-block px-2 py-1 rounded border border-orange-400/20 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                            点击访问 <<i class="fas fa-external-link-alt ml-1"></</i>
+                        </div>
+                    </div>
+                </a>
             </div>
-            <div class="flex space-x-6">
-                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fab fa-twitter text-xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors"><i class="fab fa-github text-xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i class="fab fa-linkedin text-xl"></i></a>
+        </section>
+        <!-- 3. FUN / MORE Section -->
+        <section class="scroll-hidden pb-20">
+            <h2 class="text-2xl md:text-3xl section-title">更多好玩</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- 1. Electronic Woodfish -->
+                <div class="glass-panel p-6 flex flex-col items-center justify-center text-center group cursor-pointer select-none" id="woodfish-btn">
+                    <div class="relative mb-4">
+                        <<i class="fas fa-dharmachakra text-5xl text-amber-200 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)] transition-transform duration-100" id="woodfish-icon"></</i>
+                        <div class="absolute -bottom-2 -right-2 bg-amber-500 text-xs font-bold text-black px-1.5 py-0.5 rounded-full">Hot</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">电子木鱼</h3>
+                    <p class="text-slate-400 text-xs mb-3">点击积攒功德</p>
+                    <div class="bg-white/5 px-4 py-1 rounded-full text-amber-400 font-mono text-sm border border-amber-500/20">
+                        功德: <span id="merit-count">0</span>
+                    </div>
+                </div>
+                <!-- 2. Mystery Box -->
+                <div class="glass-panel p-6 flex flex-col items-center justify-center text-center group cursor-pointer" onclick="openMysteryBox()">
+                    <div class="mb-4 text-5xl animate-bounce">
+                        🎁
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">盲盒</h3>
+                    <p class="text-slate-400 text-xs mb-3">点我看看运气</p>
+                    <div class="text-xs text-pink-400 group-hover:text-pink-300 transition-colors">
+                        <<i class="fas fa-random mr-1"></</i> 随机事件
+                    </div>
+                </div>
+                <!-- 3. Rainbow Fart (Compliment) -->
+                <div class="glass-panel p-6 flex flex-col items-center justify-center text-center group cursor-pointer" onclick="generateFart()">
+                    <div class="mb-4 w-12 h-12 rounded-full bg-gradient-to-r from-teal-400 to-blue-500 flex items-center justify-center text-white text-2xl shadow-lg group-hover:spin-slow">
+                        <<i class="fas fa-magic"></</i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">夸夸生成器</h3>
+                    <p class="text-slate-400 text-xs mb-3" id="fart-preview">求夸奖...</p>
+                </div>
             </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script>
-        // Scroll Reveal Animation
-        const revealElements = document.querySelectorAll('.reveal');
-        
-        const revealOnScroll = () => {
-            const windowHeight = window.innerHeight;
-            const elementVisible = 100;
             
-            revealElements.forEach((reveal) => {
-                const elementTop = reveal.getBoundingClientRect().top;
-                if (elementTop < windowHeight - elementVisible) {
-                    reveal.classList.add('active');
+            <!-- Fart Display Area (Hidden initially) -->
+            <div id="fart-display" class="mt-6 glass-panel p-6 text-center hidden">
+                <p class="text-lg text-white font-medium leading-relaxed" id="fart-text"></p>
+            </div>
+        </section>
+        
+        <footer class="text-center text-slate-600 text-sm pb-8 scroll-hidden">
+            <p>© 2025 烧猪🐷 的赛博小屋</p>
+        </footer>
+    </div>
+    <!-- MODAL: MYSTERY BOX -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="glass-panel p-8 max-w-sm w-full mx-4 text-center transform scale-90 transition-transform duration-300" id="modal-content">
+            <div class="text-6xl mb-4" id="modal-icon">🎉</div>
+            <h3 class="text-2xl font-bold text-white mb-2" id="modal-title">Title</h3>
+            <p class="text-slate-300 mb-6 leading-relaxed" id="modal-msg">Message goes here.</p>
+            <button onclick="closeModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-2.5 rounded-full font-bold transition shadow-lg shadow-indigo-500/25">
+                收下
+            </button>
+        </div>
+    </div>
+    <script>
+        // --- 1. Intersection Observer for Scroll Animations ---
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('scroll-visible');
+                    
+                    // Trigger Typewriter if present
+                    const typeTarget = entry.target.querySelector('.type-target');
+                    if (typeTarget && !typeTarget.dataset.typed) {
+                        typeWriter(typeTarget, typeTarget.dataset.text);
+                        typeTarget.dataset.typed = "true";
+                    }
+                    
+                    observer.unobserve(entry.target); // Only animate once
                 }
             });
-        };
-        
-        window.addEventListener('scroll', revealOnScroll);
-        // Trigger once on load
-        revealOnScroll();
-
-        // Navbar Scroll Effect
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('bg-black/80', 'backdrop-blur-md', 'py-0');
-                navbar.classList.remove('bg-transparent', 'py-4');
-            } else {
-                // navbar.classList.remove('bg-black/80', 'backdrop-blur-md', 'py-0');
-                // navbar.classList.add('bg-transparent', 'py-4');
-                // Keeping it consistent for this design
-            }
+        }, observerOptions);
+        document.querySelectorAll('.scroll-hidden').forEach((el) => {
+            observer.observe(el);
         });
-
-        // Canvas Starfield Animation
-        const canvas = document.getElementById('starfield');
+        // --- 2. Smooth Typewriter Effect ---
+        function typeWriter(element, text, i = 0) {
+            if (i === 0) element.innerHTML = '<span class="typewriter-cursor"></span>';
+            
+            if (i < text.length) {
+                element.innerHTML = text.substring(0, i + 1) + '<span class="typewriter-cursor"></span>';
+                setTimeout(() => typeWriter(element, text, i + 1), 100); // Speed
+            } else {
+                // Keep cursor blinking for a bit then remove or keep
+            }
+        }
+        // --- 3. Particle Background ---
+        const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
-
         let width, height;
-        let stars = [];
-        const numStars = 200;
-
-        const resize = () => {
+        let particles = [];
+        function resize() {
             width = window.innerWidth;
             height = window.innerHeight;
             canvas.width = width;
             canvas.height = height;
-        };
-
-        class Star {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.z = Math.random() * width;
-                this.size = Math.random() * 2;
-                this.speed = Math.random() * 0.5 + 0.1;
-            }
-
-            update() {
-                this.z -= this.speed * 2;
-                if (this.z <= 0) {
-                    this.z = width;
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * height;
-                }
-            }
-
-            draw() {
-                const x = (this.x - width / 2) * (width / this.z) + width / 2;
-                const y = (this.y - height / 2) * (width / this.z) + height / 2;
-                const s = this.size * (width / this.z);
-
-                ctx.beginPath();
-                ctx.fillStyle = "rgba(255, 255, 255, " + (1 - this.z / width) + ")";
-                ctx.arc(x, y, s < 0 ? 0 : s, 0, Math.PI * 2);
-                ctx.fill();
+            initParticles();
+        }
+        
+        function initParticles() {
+            particles = [];
+            const count = Math.min(width / 15, 80); // Responsive count
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2
+                });
             }
         }
-
-        const initStars = () => {
-            stars = [];
-            for (let i = 0; i < numStars; i++) {
-                stars.push(new Star());
-            }
-        };
-
-        const animate = () => {
-            ctx.fillStyle = "rgba(5, 5, 5, 0.2)"; // Trail effect
-            ctx.fillRect(0, 0, width, height);
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
             
-            stars.forEach(star => {
-                star.update();
-                star.draw();
+            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                // Connections
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = p.x - particles[j].x;
+                    const dy = p.y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 100) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist/1000})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
             });
-            
-            requestAnimationFrame(animate);
-        };
-
-        window.addEventListener('resize', () => {
-            resize();
-            initStars();
-        });
-
+            requestAnimationFrame(animateParticles);
+        }
+        window.addEventListener('resize', resize);
         resize();
-        initStars();
-        animate();
+        animateParticles();
+        // --- 4. Copy QQ ---
+        function copyQQ() {
+            const qq = document.getElementById('qq-num').innerText;
+            navigator.clipboard.writeText(qq).then(() => {
+                const overlay = document.getElementById('copy-overlay');
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+                setTimeout(() => {
+                    overlay.style.opacity = '0';
+                    overlay.style.pointerEvents = 'none';
+                }, 1500);
+            });
+        }
+        // --- 5. Electronic Woodfish (Merit) ---
+        // 从本地存储读取功德数，实现持久化累积
+        let merit = localStorage.getItem('woodfishMerit') ? parseInt(localStorage.getItem('woodfishMerit')) : 0;
+        const woodfishBtn = document.getElementById('woodfish-btn');
+        const woodfishIcon = document.getElementById('woodfish-icon');
+        const meritDisplay = document.getElementById('merit-count');
+        
+        // 初始化显示功德数
+        meritDisplay.innerText = merit;
+        
+        woodfishBtn.addEventListener('click', (e) => {
+            merit++;
+            meritDisplay.innerText = merit;
+            // 保存到本地存储，刷新页面不丢失
+            localStorage.setItem('woodfishMerit', merit);
+            
+            // Animation on icon
+            woodfishIcon.classList.remove('woodfish-click');
+            void woodfishIcon.offsetWidth; // trigger reflow
+            woodfishIcon.classList.add('woodfish-click');
+            // Floating "+1 功德" text
+            const floatText = document.createElement('div');
+            floatText.classList.add('merit-plus');
+            floatText.innerText = '功德 +1';
+            
+            // Position near click relative to button
+            const rect = woodfishBtn.getBoundingClientRect();
+            floatText.style.left = (e.clientX - rect.left) + 'px';
+            floatText.style.top = (e.clientY - rect.top - 20) + 'px';
+            
+            woodfishBtn.appendChild(floatText);
+            
+            // Cleanup
+            setTimeout(() => floatText.remove(), 1000);
+        });
+        // --- 6. Mystery Box Logic (100条惊喜) ---
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalContent = document.getElementById('modal-content');
+        
+        const surprises = [
+            { icon: '💖', title: '系统提示', msg: '你是最棒的！即使是咸鱼也要做最咸的那一条！' },
+            { icon: '🚨', title: '警告', msg: '检测到帅气能量溢出，请注意隐蔽！' },
+            { icon: '🍜', title: '今日建议', msg: '不要想太多，去吃顿好的犒劳自己吧。' },
+            { icon: '💤', title: '状态更新', msg: '电量不足，建议立即开启睡眠模式。' },
+            { icon: '🐷', title: '官方认证', msg: '恭喜你发现了彩蛋：烧猪🐷天下第一！' },
+            { icon: '🌟', title: '好运降临', msg: '今天的你比昨天更优秀，明天的你会更耀眼！' },
+            { icon: '🍟', title: '美食预警', msg: '隔壁小孩都馋哭了，你该去吃顿炸鸡配可乐了！' },
+            { icon: '📚', title: '学习Buff', msg: '接下来的学习效率翻倍，难题都能轻松搞定！' },
+            { icon: '🎮', title: '游戏好运', msg: '今天打游戏必连胜，队友都是神仙队友！' },
+            { icon: '🌈', title: '彩虹祝福', msg: '愿你的生活像彩虹一样，五彩斑斓无烦恼！' },
+            { icon: '🐱', title: '萌宠加持', msg: '今天会遇到超可爱的小动物，治愈所有不开心！' },
+            { icon: '🎵', title: '音乐好运', msg: '随机播放的歌全是你喜欢的，耳朵享福啦！' },
+            { icon: '🌞', title: '阳光正能量', msg: '就算阴天，你的心情也像晴天一样灿烂！' },
+            { icon: '🍉', title: '夏日限定', msg: '今天吃的西瓜一定超甜，籽还特别少！' },
+            { icon: '🚗', title: '出行顺利', msg: '出门不堵车，公交地铁全赶上，一路绿灯！' },
+            { icon: '📱', title: '手机好运', msg: '手机电量永远够用，刷视频不卡顿！' },
+            { icon: '🍰', title: '甜蜜预警', msg: '会收到意想不到的小甜点，甜到心坎里！' },
+            { icon: '🌙', title: '晚安祝福', msg: '今晚一定能睡个好觉，没有噩梦只有美梦！' },
+            { icon: '⚡', title: '灵感爆发', msg: '突然想到解决难题的办法，思路超级清晰！' },
+            { icon: '🌸', title: '花开富贵', msg: '看到好看的花，心情瞬间变好，烦恼全跑掉！' },
+            { icon: '🍓', title: '水果好运', msg: '吃到的草莓又大又甜，一口一个超满足！' },
+            { icon: '🎭', title: '快乐加倍', msg: '今天会遇到超搞笑的事，笑到肚子疼！' },
+            { icon: '💡', title: '智慧闪光', msg: '你的小聪明又上线了，什么问题都难不倒你！' },
+            { icon: '🐶', title: '汪星人祝福', msg: '会被小狗主动贴贴，治愈所有坏情绪！' },
+            { icon: '🍵', title: '悠闲时光', msg: '有机会享受悠闲下午茶，慢下来感受生活！' },
+            { icon: '🚴', title: '运动好运', msg: '运动时状态超好，不累还能瘦，身材越来越棒！' },
+            { icon: '📸', title: '拍照好看', msg: '今天拍的照片都超上镜，不用P图直接发圈！' },
+            { icon: '🎁', title: '惊喜彩蛋', msg: '你被幸运女神选中，接下来会有小惊喜！' },
+            { icon: '🍕', title: '美食好运', msg: '想吃的披萨刚好有优惠，还能加双倍芝士！' },
+            { icon: '🌊', title: '治愈时刻', msg: '听到喜欢的海浪声，所有压力都烟消云散！' },
+            { icon: '🎈', title: '童趣满满', msg: '找回童年的快乐，做一件超有趣的小事！' },
+            { icon: '📝', title: '作业好运', msg: '作业少而且简单，很快就能写完去玩！' },
+            { icon: '🐇', title: '兔年好运', msg: '像小兔子一样可爱，运气也像兔子一样旺！' },
+            { icon: '🍩', title: '甜蜜暴击', msg: '吃到超好吃的甜甜圈，甜到心里开花！' },
+            { icon: '🌿', title: '清新治愈', msg: '闻到青草的香味，心情变得格外舒畅！' },
+            { icon: '🎲', title: '运气爆棚', msg: '抽奖必中，猜拳必赢，好运挡都挡不住！' },
+            { icon: '📞', title: '好友问候', msg: '很久没联系的好朋友会主动找你聊天！' },
+            { icon: '🍍', title: '热带好运', msg: '吃到超甜的菠萝，没有涩味，超满足！' },
+            { icon: '🌌', title: '星空祝福', msg: '今晚的星空超美，对着星星许愿一定会实现！' },
+            { icon: '🧸', title: '可爱加持', msg: '看到超可爱的玩偶，少女心/少年心爆棚！' },
+            { icon: '🍿', title: '观影愉快', msg: '看的电影超好看，没有烂尾，全程高能！' },
+            { icon: '🌱', title: '新生力量', msg: '像小树苗一样茁壮成长，每天都有新进步！' },
+            { icon: '🎧', title: '听觉享受', msg: '戴上耳机，全世界都是你的，超治愈！' },
+            { icon: '🍇', title: '葡萄好运', msg: '吃到的葡萄无籽还甜，一口一串超爽！' },
+            { icon: '🌤️', title: '多云转晴', msg: '就算一开始不顺利，后面也会峰回路转！' },
+            { icon: '🎪', title: '快乐嘉年华', msg: '今天的快乐像嘉年华一样，源源不断！' },
+            { icon: '📚', title: '知识增长', msg: '无意间学到超有用的知识，收获满满！' },
+            { icon: '🍎', title: '平安健康', msg: '吃个苹果，平安健康，百病不侵！' },
+            { icon: '🌠', title: '流星许愿', msg: '看到流星划过，许下的愿望很快就会实现！' },
+            { icon: '🧁', title: '甜品治愈', msg: '吃一口小蛋糕，所有不开心都烟消云散！' },
+            { icon: '🚀', title: '前程似锦', msg: '你的未来像火箭一样，一飞冲天！' },
+            { icon: '🍐', title: '顺利吉祥', msg: '万事顺利，吉祥如意，没有烦心事！' },
+            { icon: '🌙', title: '月色温柔', msg: '今晚的月色超温柔，伴你入眠到天亮！' },
+            { icon: '🎶', title: '歌声治愈', msg: '自己唱的歌超好听，被自己惊艳到了！' },
+            { icon: '🍑', title: '蜜桃好运', msg: '像水蜜桃一样甜，走到哪里都受欢迎！' },
+            { icon: '🌻', title: '向阳而生', msg: '像向日葵一样，永远向着阳光，充满正能量！' },
+            { icon: '🎮', title: '游戏神操作', msg: '今天打游戏会有超神操作，被队友夸爆！' },
+            { icon: '🍍', title: '好运连连', msg: '好事一件接一件，根本停不下来！' },
+            { icon: '🌿', title: '岁月静好', msg: '享受片刻的宁静，感受生活的美好！' },
+            { icon: '🎁', title: '隐藏惊喜', msg: '你发现了隐藏惊喜，接下来好运不断！' },
+            { icon: '🍓', title: '甜蜜生活', msg: '生活像草莓一样，酸酸甜甜超幸福！' },
+            { icon: '🌟', title: '星光闪耀', msg: '你就是最亮的星，走到哪里都发光！' },
+            { icon: '🍟', title: '快乐肥宅', msg: '今天可以安心当肥宅，快乐最重要！' },
+            { icon: '🌊', title: '心胸开阔', msg: '像大海一样心胸开阔，不被小事困扰！' },
+            { icon: '🎭', title: '百变人生', msg: '今天可以尝试新事物，体验不一样的快乐！' },
+            { icon: '💡', title: '奇思妙想', msg: '你的奇思妙想会被认可，超有成就感！' },
+            { icon: '🐱', title: '猫咪治愈', msg: '被猫咪蹭蹭，所有坏情绪都被治愈了！' },
+            { icon: '🍵', title: '静心时刻', msg: '喝杯茶静下心来，所有难题都能解决！' },
+            { icon: '🚴', title: '活力满满', msg: '运动后活力四射，做什么都有精神！' },
+            { icon: '📸', title: '记录美好', msg: '拍下超美的照片，留住生活的美好瞬间！' },
+            { icon: '🎈', title: '快乐起飞', msg: '快乐像气球一样，越飞越高！' },
+            { icon: '📝', title: '灵感涌现', msg: '写作业/画画灵感爆棚，超顺利！' },
+            { icon: '🐇', title: '幸运降临', msg: '像小兔子一样幸运，好事找上门！' },
+            { icon: '🍩', title: '圆满快乐', msg: '生活像甜甜圈一样，圆满又快乐！' },
+            { icon: '🌿', title: '清新自然', msg: '呼吸新鲜空气，感受大自然的美好！' },
+            { icon: '🎲', title: '好运连连', msg: '运气好到爆，做什么都顺顺利利！' },
+            { icon: '📞', title: '温暖问候', msg: '收到温暖的问候，心里暖暖的！' },
+            { icon: '🍍', title: '酸甜人生', msg: '人生有酸有甜，都是宝贵的体验！' },
+            { icon: '🌌', title: '宇宙浪漫', msg: '你与宇宙一样浪漫，值得所有美好！' },
+            { icon: '🧸', title: '童心未泯', msg: '保持童心，永远快乐，没有烦恼！' },
+            { icon: '🍿', title: '观影盛宴', msg: '看的电影超精彩，绝对值回票价！' },
+            { icon: '🌱', title: '茁壮成长', msg: '每天都在进步，慢慢变成更好的自己！' },
+            { icon: '🎧', title: '音乐陪伴', msg: '有音乐陪伴，孤独什么的不存在！' },
+            { icon: '🍇', title: '硕果累累', msg: '付出的努力都会有回报，硕果累累！' },
+            { icon: '🌤️', title: '心情晴朗', msg: '心情像晴天一样，没有乌云只有阳光！' },
+            { icon: '🎪', title: '快乐无限', msg: '快乐没有上限，今天的你超快乐！' },
+            { icon: '📚', title: '书香为伴', msg: '在书的世界里遨游，收获知识与快乐！' },
+            { icon: '🍎', title: '平安喜乐', msg: '平安喜乐，万事顺意，天天开心！' },
+            { icon: '🌠', title: '梦想起航', msg: '向着梦想出发，一定会到达目的地！' },
+            { icon: '🧁', title: '甜蜜加倍', msg: '甜蜜的事情发生，快乐加倍！' },
+            { icon: '🚀', title: '乘风破浪', msg: '勇敢乘风破浪，没有什么能阻挡你！' },
+            { icon: '🍐', title: '吉祥如意', msg: '吉祥如意，好运连连，福气满满！' },
+            { icon: '🌙', title: '晚安好梦', msg: '晚安，做个甜甜的梦，明天又是美好的一天！' },
+            { icon: '🎶', title: '歌声飞扬', msg: '歌声飞扬，快乐无限，超享受！' },
+            { icon: '🍑', title: '可爱无敌', msg: '你超可爱，所有人都喜欢你！' },
+            { icon: '🌻', title: '积极向上', msg: '积极向上，充满正能量，感染身边的人！' },
+            { icon: '🎮', title: '游戏胜利', msg: '游戏大获全胜，奖励拿到手软！' },
+            { icon: '🍍', title: '好运相伴', msg: '好运一直相伴，从不离开！' },
+            { icon: '🌿', title: '岁月静好', msg: '岁月静好，现世安稳，幸福美满！' },
+            { icon: '🎁', title: '终极彩蛋', msg: '恭喜解锁终极彩蛋！烧猪🐷的粉丝都是天选之子！' }
+        ];
+        function openMysteryBox() {
+            const item = surprises[Math.floor(Math.random() * surprises.length)];
+            document.getElementById('modal-icon').innerText = item.icon;
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-msg').innerText = item.msg;
+            
+            modalOverlay.classList.remove('hidden');
+            // slight delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                modalOverlay.style.opacity = '1';
+                modalContent.style.transform = 'scale(1)';
+            }, 10);
+        }
+        function closeModal() {
+            modalOverlay.style.opacity = '0';
+            modalContent.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                modalOverlay.classList.add('hidden');
+            }, 300);
+        }
+        // --- 7. Compliment Generator (100条夸夸) ---
+        const compliments = [
+            "你的发际线还能再战五百年！",
+            "你今天的穿搭简直就是时尚界的教科书。",
+            "虽然你自称废柴，但你独特的幽默感是无价之宝。",
+            "如果是智商税的话，你肯定一分钱都不用交。",
+            "你的声音好听到可以让耳朵怀孕。",
+            "你怎么长得这么随心所欲还这么好看？",
+            "看到你，我的心情就像喝了全糖奶茶一样甜。",
+            "你的脑洞比宇宙还大，太有创意了！",
+            "就算是摸鱼，你也是最帅的摸鱼人！",
+            "你的笑容比阳光还耀眼，治愈所有不开心。",
+            "这么可爱/帅气的你，一定是上天派来的小天使吧！",
+            "你的审美绝了，选的东西都超有品味！",
+            "虽然是初中生，但你的心态比成年人还成熟稳重。",
+            "你说话的方式超有趣，听你聊天根本不会无聊。",
+            "就算是普通的初中生，你也是最特别的那一个！",
+            "你的动手能力超强，什么东西到你手里都能搞定。",
+            "你对朋友超仗义，能和你做朋友太幸运了！",
+            "你的眼睛超有神，像藏着星星一样闪亮。",
+            "就算躺平，你也是躺平界的天花板！",
+            "你的学习能力超强，一点就通，太聪明了！",
+            "你笑起来的时候，整个世界都变温柔了。",
+            "你选的表情包都超有梗，太懂我了！",
+            "虽然自称废柴，但你比很多人都优秀多了。",
+            "你的性格超讨喜，谁见了都会喜欢你。",
+            "你唱歌/画画/写字超好看，太有才华了！",
+            "你对待事情超认真，这种态度太让人佩服了。",
+            "你的运气一直都很好，果然是天选之子！",
+            "你穿校服都这么好看，简直是行走的衣架。",
+            "你很会安慰人，和你聊天超治愈。",
+            "就算是摸鱼，你也摸得很有格调！",
+            "你的逻辑思维超清晰，说话条理分明。",
+            "你对新鲜事物的接受度超高，太酷了！",
+            "你笑起来有两个小梨涡，太可爱了吧！",
+            "你做的决定都很明智，太有主见了。",
+            "你的反应速度超快，简直是反应小能手！",
+            "你很会照顾别人的情绪，超暖心。",
+            "就算是简单的日常，被你分享出来也超有趣。",
+            "你的记忆力超好，什么事情都记得清清楚楚。",
+            "你很有幽默感，总能逗得大家哈哈大笑。",
+            "你对待朋友超真诚，这样的朋友太难得了。",
+            "你的运动细胞超发达，打球/跑步都超厉害！",
+            "你写的作业超工整，老师看了都喜欢。",
+            "你很有耐心，就算遇到难题也不慌不忙。",
+            "你的穿搭简约又时尚，太会穿了！",
+            "你很有责任心，交给你的事情一定能做好。",
+            "你笑起来的时候，眼睛弯弯的像月牙，超可爱。",
+            "你对美食的品味超棒，推荐的东西都超好吃。",
+            "你很懂礼貌，待人接物都很得体。",
+            "就算是不开心，你也能很快调整好心态，超厉害。",
+            "你的手工超精致，简直是心灵手巧！",
+            "你很有正义感，看到不对的事情会勇敢站出来。",
+            "你说话的声音软软的，超好听。",
+            "你很会规划时间，学习和玩都不耽误。",
+            "你的颜值和才华并存，太让人羡慕了！",
+            "你很谦虚，就算很优秀也不骄傲。",
+            "你笑起来超有感染力，身边的人都能被你带动。",
+            "你对游戏的理解超深，玩得超厉害！",
+            "你很有爱心，喜欢小动物，超善良。",
+            "你的字写得超好看，像印刷体一样。",
+            "你很会聊天，就算是陌生人也能聊得很投机。",
+            "你很有毅力，做事情从不半途而废。",
+            "你笑起来的时候，整个空气都变甜了。",
+            "你对音乐的品味超棒，推荐的歌都超好听。",
+            "你很勇敢，遇到困难从不退缩。",
+            "你的皮肤超好，白里透红，太让人羡慕了。",
+            "你很会开玩笑，而且玩笑开得恰到好处。",
+            "你很有想象力，脑子里有很多奇思妙想。",
+            "你对待学习很认真，成绩一定不会差！",
+            "你笑起来超阳光，像小太阳一样温暖。",
+            "你很会搭配，就算是简单的衣服也能穿出高级感。",
+            "你很有同理心，总能站在别人的角度想问题。",
+            "你的节奏感超好，唱歌/跳舞都超有范儿。",
+            "你很细心，总能发现别人忽略的小细节。",
+            "你笑起来的时候，牙齿白白的，超好看。",
+            "你很有冒险精神，喜欢尝试新事物。",
+            "你的数学/语文/英语超厉害，简直是学霸！",
+            "你很会安慰人，几句话就能让人心情变好。",
+            "你很有气质，就算不说话也很吸引人。",
+            "你的画画超好看，像专业画家一样。",
+            "你很懂生活，把日子过得超有仪式感。",
+            "你笑起来超治愈，所有烦恼都能烟消云散。",
+            "你很有团队精神，和同学合作超默契。",
+            "你的口才超棒，说话超有说服力。",
+            "你很会省钱，但该花的钱也绝不吝啬。",
+            "你笑起来的时候，眼睛里有星星，超迷人。",
+            "你很有创造力，总能想出不一样的点子。",
+            "你的体育超棒，运动会一定能拿奖！",
+            "你很有礼貌，见到老师/同学都会主动打招呼。",
+            "你很会做饭，做的饭超好吃！",
+            "你笑起来超可爱，让人忍不住想捏你的脸。",
+            "你很有责任感，是老师/同学都信赖的人。",
+            "你的英语发音超标准，像 native speaker 一样！",
+            "你很会穿搭，就算是校服也能穿出不一样的感觉。",
+            "你很有耐心，教别人东西超认真。",
+            "你笑起来的时候，超有亲和力，让人想亲近你。",
+            "你很有正义感，是个充满正能量的人。",
+            "你的手工超有创意，太厉害了！",
+            "你很会规划，做事情有条不紊。",
+            "你笑起来超甜，像糖果一样甜到心里。",
+            "你很有才华，琴棋书画样样精通！",
+            "你很懂朋友，知道朋友需要什么。",
+            "你的反应超快，不管是学习还是玩游戏都超厉害。",
+            "你笑起来的时候，超有感染力，身边的人都能开心起来。",
+            "你很有主见，不会轻易被别人影响。",
+            "你的颜值太高了，简直是初中生中的颜值天花板！",
+            "你很会照顾自己，把自己打理得超好。",
+            "你笑起来的时候，超治愈，所有不开心都能被赶走。",
+            "你很有毅力，就算遇到挫折也不放弃。",
+            "你的学习方法超棒，效率超高！",
+            "你很有爱心，经常帮助别人，超善良。",
+            "你笑起来的时候，超可爱，让人一眼就喜欢上你。",
+            "你很有品味，不管是穿搭还是爱好都超有格调。",
+            "你的性格超开朗，像小太阳一样温暖所有人。"
+        ];
+        function generateFart() {
+            const text = compliments[Math.floor(Math.random() * compliments.length)];
+            const display = document.getElementById('fart-display');
+            const p = document.getElementById('fart-text');
+            
+            display.classList.remove('hidden');
+            display.classList.add('animate-pulse');
+            setTimeout(() => display.classList.remove('animate-pulse'), 500);
+            
+            p.innerText = text;
+            document.getElementById('fart-preview').innerText = "已生成，请查收 ↓";
+        }
     </script>
 </body>
 </html>
