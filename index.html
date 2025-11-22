@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>烧猪🐷 | 个人主页</title>
+    <title>烧猪🐷 | 赛博空间</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #6366f1; /* Indigo */
-            --secondary-color: #a855f7; /* Purple */
-            --accent-color: #ec4899; /* Pink */
-            --bg-dark: #0f172a;
+            --primary-glow: #4f46e5;
+            --secondary-glow: #ec4899;
+            --bg-dark: #020617;
         }
+
         body {
             margin: 0;
             font-family: 'Noto Sans SC', sans-serif;
@@ -24,11 +24,12 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
-        /* --- Background Effects --- */
-        .bg-cosmos {
+
+        /* --- Background --- */
+        .bg-deep-space {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f172a 100%);
+            background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #020617 80%);
             z-index: -2;
         }
         
@@ -36,688 +37,608 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            opacity: 0.5;
+            opacity: 0.6;
             pointer-events: none;
         }
-        /* --- Glassmorphism --- */
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+        /* --- Liquid Glass Effect (The Core Style) --- */
+        .liquid-card {
+            background: rgba(255, 255, 255, 0.015);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 4px 30px rgba(0, 0, 0, 0.1),
+                inset 0 0 20px rgba(255, 255, 255, 0.02);
             border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            overflow: hidden;
         }
-        
-        .glass-panel::before {
+
+        /* Shiny reflection line */
+        .liquid-card::before {
             content: '';
             position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: 0.5s;
+            top: 0; left: -150%; width: 100%; height: 100%;
+            background: linear-gradient(
+                115deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.05) 40%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(255,255,255,0.05) 60%, 
+                transparent 100%
+            );
+            transform: skewX(-25deg);
+            transition: 0.7s;
         }
-        .glass-panel:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.3);
+
+        .liquid-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.4),
+                0 0 20px rgba(99, 102, 241, 0.2); /* Glow */
         }
         
-        .glass-panel:hover::before {
-            left: 100%;
+        .liquid-card:hover::before {
+            left: 150%;
         }
+
         /* --- Scroll Animations --- */
         .scroll-hidden {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(60px) scale(0.95);
+            filter: blur(10px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .scroll-visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
+            filter: blur(0);
         }
-        /* --- Typewriter Effect Cursor --- */
+
+        /* Stagger delay for children */
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+
+        /* --- Text Effects --- */
+        .title-glow {
+            background: linear-gradient(to right, #a5b4fc, #f0abfc);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(165, 180, 252, 0.5);
+            animation: hueRotate 10s infinite linear;
+        }
+
+        @keyframes hueRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
         .typewriter-cursor::after {
             content: '|';
             animation: blink 1s infinite;
-            margin-left: 2px;
-            color: var(--accent-color);
+            margin-left: 4px;
+            color: var(--secondary-glow);
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        /* --- Woodfish Animation --- */
-        @keyframes woodfish-scale {
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* --- Animations for Features --- */
+        @keyframes woodfish-bounce {
             0% { transform: scale(1); }
-            50% { transform: scale(0.9); }
+            40% { transform: scale(0.85); }
             100% { transform: scale(1); }
         }
-        .woodfish-click {
-            animation: woodfish-scale 0.1s ease-out;
-        }
-        
-        .merit-plus {
+        .woodfish-active i { animation: woodfish-bounce 0.15s ease-out; }
+
+        .merit-float {
             position: absolute;
             color: #fbbf24;
             font-weight: bold;
+            font-size: 1.2rem;
             pointer-events: none;
-            animation: floatUpFade 1s ease-out forwards;
-            z-index: 50;
+            animation: floatUp 0.8s ease-out forwards;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
         }
-        @keyframes floatUpFade {
-            0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-50px); }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-60px) scale(1.5); }
         }
-        /* --- Layout Utilities --- */
-        .section-title {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-            font-weight: 900;
-            background: linear-gradient(to right, #fff, #94a3b8);
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.02em;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -5px; left: 0;
-            width: 40px; height: 4px;
-            background: var(--primary-color);
-            border-radius: 2px;
-        }
-        /* --- Custom Scrollbar --- */
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        /* --- Neon Glow Text --- */
-        .neon-text {
-            text-shadow: 0 0 10px rgba(99, 102, 241, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
-        }
-        /* --- 烧猪头像影子映射 --- */
-        .pig-avatar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 6rem;
-            text-shadow: 0 0 20px rgba(251, 191, 36, 0.7), 0 0 40px rgba(251, 191, 36, 0.5), 0 0 60px rgba(251, 191, 36, 0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body class="antialiased selection:bg-indigo-500/30">
-    <!-- Backgrounds -->
-    <div class="bg-cosmos"></div>
+<body class="antialiased selection:bg-indigo-500/40 selection:text-white">
+
+    <!-- Background -->
+    <div class="bg-deep-space"></div>
     <canvas id="particles-canvas"></canvas>
+
     <!-- Main Container -->
-    <div class="max-w-5xl mx-auto px-6 py-12 md:py-20 relative z-10 flex flex-col gap-16">
-        <!-- HERO Section -->
-        <header class="text-center flex flex-col items-center justify-center min-h-[40vh] scroll-hidden">
-            <div class="relative group mb-6">
-                <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                <div class="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white/10 shadow-2xl bg-slate-800 flex items-center justify-center">
-                    <!-- 替换为烧猪🐷影子映射 -->
-                    <div class="pig-avatar">烧猪🐷</div>
-                </div>
+    <div class="max-w-4xl mx-auto px-6 pb-24 relative z-10">
+
+        <!-- 1. HERO SECTION (Name only, no avatar) -->
+        <header class="min-h-[60vh] flex flex-col items-center justify-center text-center scroll-hidden">
+            <div class="relative">
+                <!-- Decorative blurred glow behind text -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-600/20 rounded-full blur-[80px]"></div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-pink-600/20 rounded-full blur-[60px] animate-pulse"></div>
+                
+                <h1 class="text-7xl md:text-9xl font-black tracking-tighter mb-2 title-glow relative z-10">
+                    烧猪🐷
+                </h1>
             </div>
-            
-            <h1 class="text-6xl md:text-8xl font-black text-white mb-4 tracking-tighter drop-shadow-2xl">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-white to-purple-300">烧猪🐷</span>
-            </h1>
-            <div class="h-8 flex items-center justify-center">
-                <p class="text-slate-400 text-lg md:text-xl font-light type-target" data-text="别看了，就一个废柴普通初中生"></p>
+
+            <!-- Typewriter Bio -->
+            <div class="h-12 flex items-center justify-center mt-8">
+                <p class="text-slate-300 text-lg md:text-2xl font-light tracking-wide">
+                    <span class="type-target" data-text="别看了，就一个废柴普通初中生"></span>
+                </p>
+            </div>
+
+            <div class="mt-12 animate-bounce text-slate-500">
+                <i class="fas fa-chevron-down"></i>
             </div>
         </header>
-        <!-- 1. INFO Section -->
-        <section class="scroll-hidden">
-            <h2 class="text-2xl md:text-3xl section-title">个人档案</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Age/Status -->
-                <div class="glass-panel p-6 flex items-center gap-4 group">
-                    <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl group-hover:scale-110 transition-transform">
-                        <<i class="fas fa-user-astronaut"></</i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-400 uppercase tracking-wider">Age</p>
-                        <p class="text-xl font-bold text-white">14岁 <span class="text-sm font-normal text-slate-400">/ 初中生</span></p>
-                    </div>
+
+        <!-- 2. INFO GRID -->
+        <section class="mb-20 scroll-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="liquid-card p-6 flex flex-col items-center justify-center text-center group stagger-1">
+                    <i class="fas fa-child text-3xl text-indigo-400 mb-3 group-hover:rotate-12 transition-transform"></i>
+                    <h3 class="text-sm text-slate-400 uppercase tracking-widest mb-1">Age</h3>
+                    <p class="text-2xl font-bold text-white">14岁</p>
                 </div>
-                
-                <!-- Location -->
-                <div class="glass-panel p-6 flex items-center gap-4 group">
-                    <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl group-hover:scale-110 transition-transform">
-                        <<i class="fas fa-map-marker-alt"></</i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-400 uppercase tracking-wider">Location</p>
-                        <p class="text-xl font-bold text-white">中国 <span class="text-sm font-normal text-slate-400">/ 地球online</span></p>
-                    </div>
+                <div class="liquid-card p-6 flex flex-col items-center justify-center text-center group stagger-2">
+                    <i class="fas fa-school text-3xl text-pink-400 mb-3 group-hover:-rotate-12 transition-transform"></i>
+                    <h3 class="text-sm text-slate-400 uppercase tracking-widest mb-1">Role</h3>
+                    <p class="text-2xl font-bold text-white">初中生</p>
                 </div>
-                <!-- Status -->
-                <div class="glass-panel p-6 flex items-center gap-4 group">
-                    <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 text-xl group-hover:scale-110 transition-transform">
-                        <<i class="fas fa-battery-full"></</i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-400 uppercase tracking-wider">Status</p>
-                        <p class="text-xl font-bold text-white">躺平 <span class="text-sm font-normal text-slate-400">/ 摸鱼中</span></p>
-                    </div>
+                <div class="liquid-card p-6 flex flex-col items-center justify-center text-center group stagger-3">
+                    <i class="fas fa-location-dot text-3xl text-cyan-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-sm text-slate-400 uppercase tracking-widest mb-1">Location</h3>
+                    <p class="text-2xl font-bold text-white">CN · 地球</p>
                 </div>
             </div>
         </section>
-        <!-- 2. SOCIAL Section -->
-        <section class="scroll-hidden">
-            <h2 class="text-2xl md:text-3xl section-title">社交链接</h2>
+
+        <!-- 3. SOCIAL LINKS (Liquid Glass) -->
+        <section class="mb-20 scroll-hidden">
+            <h2 class="text-2xl font-bold text-white mb-8 pl-4 border-l-4 border-indigo-500">
+                社交信号 <span class="text-sm font-normal text-slate-500 ml-2">Connection</span>
+            </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- QQ Card -->
-                <div class="glass-panel p-0 group cursor-pointer relative" onclick="copyQQ()">
-                    <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400">
-                        <<i class="far fa-clone"></</i>
-                    </div>
-                    <div class="p-6 flex items-center gap-5">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white text-3xl shadow-lg shadow-blue-500/25 group-hover:rotate-6 transition-transform duration-300">
-                            <<i class="fab fa-qq"></</i>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-white mb-1">QQ</h3>
-                            <p class="text-slate-400 font-mono tracking-wide" id="qq-num">259773138</p>
-                            <div class="mt-2 text-xs text-blue-400 bg-blue-400/10 inline-block px-2 py-1 rounded border border-blue-400/20">
-                                点击复制号码
+                <div class="liquid-card p-6 cursor-pointer group relative overflow-visible" onclick="copyQQ()">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 text-2xl shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                                <i class="fab fa-qq"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm text-blue-300 mb-0.5">QQ 账号</div>
+                                <div class="text-2xl font-bold text-white font-mono tracking-wide" id="qq-num">259773138</div>
                             </div>
                         </div>
+                        <div class="text-blue-400 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+                            <i class="far fa-clone text-xl"></i>
+                        </div>
                     </div>
-                    <!-- Success Feedback -->
-                    <div id="copy-overlay" class="absolute inset-0 bg-blue-600/90 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-                        <p class="text-white font-bold text-lg flex items-center gap-2"><<i class="fas fa-check-circle"></</i> 已复制!</p>
+                    <div id="copy-toast" class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity duration-300 pointer-events-none">
+                        已复制!
                     </div>
                 </div>
+
                 <!-- Kuaishou Card -->
-                <a href="https://v.kuaishou.com/profile/djq110723" target="_blank" class="glass-panel p-6 flex items-center gap-5 group cursor-pointer hover:bg-orange-500/5 transition-colors">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-white text-3xl shadow-lg shadow-orange-500/25 group-hover:-rotate-6 transition-transform duration-300">
-                        <<i class="fas fa-video"></</i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-xl font-bold text-white mb-1">快手主页</h3>
-                        <p class="text-slate-400 font-mono tracking-wide">djq110723</p>
-                        <div class="mt-2 text-xs text-orange-400 bg-orange-400/10 inline-block px-2 py-1 rounded border border-orange-400/20 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                            点击访问 <<i class="fas fa-external-link-alt ml-1"></</i>
+                <a href="https://v.kuaishou.com/profile/djq110723" target="_blank" class="liquid-card p-6 cursor-pointer group relative overflow-visible">
+                    <div class="absolute inset-0 bg-gradient-to-r from-orange-600/10 to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-orange-500/20 flex items-center justify-center text-orange-400 text-2xl shadow-[0_0_15px_rgba(249,115,22,0.3)]">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm text-orange-300 mb-0.5">快手主页</div>
+                                <div class="text-2xl font-bold text-white font-mono tracking-wide">djq110723</div>
+                            </div>
+                        </div>
+                        <div class="text-orange-400 opacity-50 group-hover:opacity-100 group-hover:-rotate-45 transition-all">
+                            <i class="fas fa-arrow-right text-xl"></i>
                         </div>
                     </div>
                 </a>
             </div>
         </section>
-        <!-- 3. FUN / MORE Section -->
+
+        <!-- 4. FUN ZONE (Expanded) -->
         <section class="scroll-hidden pb-20">
-            <h2 class="text-2xl md:text-3xl section-title">更多好玩</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <!-- 1. Electronic Woodfish -->
-                <div class="glass-panel p-6 flex flex-col items-center justify-center text-center group cursor-pointer select-none" id="woodfish-btn">
-                    <div class="relative mb-4">
-                        <<i class="fas fa-dharmachakra text-5xl text-amber-200 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)] transition-transform duration-100" id="woodfish-icon"></</i>
-                        <div class="absolute -bottom-2 -right-2 bg-amber-500 text-xs font-bold text-black px-1.5 py-0.5 rounded-full">Hot</div>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">电子木鱼</h3>
-                    <p class="text-slate-400 text-xs mb-3">点击积攒功德</p>
-                    <div class="bg-white/5 px-4 py-1 rounded-full text-amber-400 font-mono text-sm border border-amber-500/20">
-                        功德: <span id="merit-count">0</span>
-                    </div>
-                </div>
-                <!-- 2. Mystery Box -->
-                <div class="glass-panel p-6 flex flex-col items-center justify-center text-center group cursor-pointer" onclick="openMysteryBox()">
-                    <div class="mb-4 text-5xl animate-bounce">
-                        🎁
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">盲盒</h3>
-                    <p class="text-slate-400 text-xs mb-3">点我看看运气</p>
-                    <div class="text-xs text-pink-400 group-hover:text-pink-300 transition-colors">
-                        <<i class="fas fa-random mr-1"></</i> 随机事件
-                    </div>
-                </div>
-                <!-- 3. Rainbow Fart (Compliment) -->
-                <div class="glass-panel p-6 flex flex-col items-center justify-center text-center group cursor-pointer" onclick="generateFart()">
-                    <div class="mb-4 w-12 h-12 rounded-full bg-gradient-to-r from-teal-400 to-blue-500 flex items-center justify-center text-white text-2xl shadow-lg group-hover:spin-slow">
-                        <<i class="fas fa-magic"></</i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">夸夸生成器</h3>
-                    <p class="text-slate-400 text-xs mb-3" id="fart-preview">求夸奖...</p>
-                </div>
-            </div>
+            <h2 class="text-2xl font-bold text-white mb-8 pl-4 border-l-4 border-pink-500">
+                更多功能 <span class="text-sm font-normal text-slate-500 ml-2">Playground</span>
+            </h2>
             
-            <!-- Fart Display Area (Hidden initially) -->
-            <div id="fart-display" class="mt-6 glass-panel p-6 text-center hidden">
-                <p class="text-lg text-white font-medium leading-relaxed" id="fart-text"></p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                
+                <!-- 1. 电子木鱼 (Optimized) -->
+                <div class="liquid-card p-4 flex flex-col items-center justify-center aspect-square cursor-pointer active:scale-95 transition-transform select-none" id="woodfish-btn">
+                    <div class="relative">
+                        <i class="fas fa-dharmachakra text-4xl text-amber-300 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)] transition-all" id="woodfish-icon"></i>
+                    </div>
+                    <div class="mt-3 text-sm font-bold text-white">电子木鱼</div>
+                    <div class="text-xs text-slate-400 mt-1">功德: <span id="merit-display">0</span></div>
+                </div>
+
+                <!-- 2. 150 Random Surprises -->
+                <div class="liquid-card p-4 flex flex-col items-center justify-center aspect-square cursor-pointer hover:bg-pink-500/5 transition-colors" onclick="openMysteryBox()">
+                    <div class="text-4xl animate-pulse">🎁</div>
+                    <div class="mt-3 text-sm font-bold text-white">神秘盲盒</div>
+                    <div class="text-xs text-slate-400 mt-1">内含150+惊喜</div>
+                </div>
+
+                <!-- 3. Life Progress -->
+                <div class="liquid-card p-4 flex flex-col items-center justify-center aspect-square col-span-2 md:col-span-1">
+                    <div class="w-full">
+                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                            <span>今日</span>
+                            <span id="day-pct">0%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden mb-3">
+                            <div id="day-bar" class="h-full bg-cyan-400 w-0 transition-all duration-1000"></div>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                            <span>今年</span>
+                            <span id="year-pct">0%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                            <div id="year-bar" class="h-full bg-purple-500 w-0 transition-all duration-1000"></div>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-slate-500">时间流逝中...</div>
+                </div>
+
+                <!-- 4. Daily Luck (New) -->
+                <div class="liquid-card p-4 flex flex-col items-center justify-center aspect-square cursor-pointer" onclick="checkLuck()">
+                    <i class="fas fa-dice text-3xl text-emerald-400 mb-2" id="luck-icon"></i>
+                    <div class="text-sm font-bold text-white">今日运势</div>
+                    <div class="text-xs text-emerald-300 mt-1" id="luck-text">点击查看</div>
+                </div>
+
             </div>
         </section>
-        
-        <footer class="text-center text-slate-600 text-sm pb-8 scroll-hidden">
-            <p>© 2025 烧猪🐷 的赛博小屋</p>
+
+        <footer class="text-center text-slate-600 text-xs py-8 border-t border-white/5">
+            <p class="neon-text">MADE BY 烧猪🐷</p>
         </footer>
     </div>
-    <!-- MODAL: MYSTERY BOX -->
-    <div id="modal-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
-        <div class="glass-panel p-8 max-w-sm w-full mx-4 text-center transform scale-90 transition-transform duration-300" id="modal-content">
-            <div class="text-6xl mb-4" id="modal-icon">🎉</div>
-            <h3 class="text-2xl font-bold text-white mb-2" id="modal-title">Title</h3>
-            <p class="text-slate-300 mb-6 leading-relaxed" id="modal-msg">Message goes here.</p>
-            <button onclick="closeModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-2.5 rounded-full font-bold transition shadow-lg shadow-indigo-500/25">
+
+    <!-- Modal for Mystery Box -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300 px-6">
+        <div class="liquid-card p-8 max-w-sm w-full text-center transform scale-90 transition-transform duration-300 border border-white/20 shadow-[0_0_50px_rgba(79,70,229,0.3)]" id="modal-content">
+            <div class="text-5xl mb-4" id="modal-icon">✨</div>
+            <h3 class="text-xl font-bold text-white mb-3" id="modal-title">Title</h3>
+            <p class="text-slate-300 mb-6 leading-relaxed text-sm" id="modal-msg">Message</p>
+            <button onclick="closeModal()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-3 rounded-xl font-bold transition-all shadow-lg">
                 收下
             </button>
         </div>
     </div>
+
     <script>
-        // --- 1. Intersection Observer for Scroll Animations ---
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-        const observer = new IntersectionObserver((entries, observer) => {
+        // --- 1. Scroll Animations & Typewriter ---
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('scroll-visible');
-                    
-                    // Trigger Typewriter if present
+                    // Check for Typewriter
                     const typeTarget = entry.target.querySelector('.type-target');
                     if (typeTarget && !typeTarget.dataset.typed) {
-                        typeWriter(typeTarget, typeTarget.dataset.text);
+                        startTyping(typeTarget);
                         typeTarget.dataset.typed = "true";
                     }
-                    
-                    observer.unobserve(entry.target); // Only animate once
                 }
             });
-        }, observerOptions);
-        document.querySelectorAll('.scroll-hidden').forEach((el) => {
-            observer.observe(el);
-        });
-        // --- 2. Smooth Typewriter Effect ---
-        function typeWriter(element, text, i = 0) {
-            if (i === 0) element.innerHTML = '<span class="typewriter-cursor"></span>';
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.scroll-hidden').forEach(el => observer.observe(el));
+
+        function startTyping(element) {
+            const text = element.dataset.text;
+            let i = 0;
+            element.innerHTML = '<span class="typewriter-cursor"></span>';
             
-            if (i < text.length) {
-                element.innerHTML = text.substring(0, i + 1) + '<span class="typewriter-cursor"></span>';
-                setTimeout(() => typeWriter(element, text, i + 1), 100); // Speed
-            } else {
-                // Keep cursor blinking for a bit then remove or keep
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML = text.substring(0, i + 1) + '<span class="typewriter-cursor"></span>';
+                    i++;
+                    setTimeout(type, 100);
+                }
             }
+            type();
         }
-        // --- 3. Particle Background ---
+
+        // --- 2. Particle Background (Tech/Constellation) ---
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
-        let width, height;
+        let w, h;
         let particles = [];
+
         function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-            initParticles();
+            w = window.innerWidth;
+            h = window.innerHeight;
+            canvas.width = w;
+            canvas.height = h;
+            createParticles();
         }
-        
-        function initParticles() {
+
+        function createParticles() {
             particles = [];
-            const count = Math.min(width / 15, 80); // Responsive count
+            const count = Math.min(w / 15, 60); 
             for (let i = 0; i < count; i++) {
                 particles.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    size: Math.random() * 2
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    r: Math.random() * 2
                 });
             }
         }
-        function animateParticles() {
-            ctx.clearRect(0, 0, width, height);
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = 'rgba(165, 180, 252, 0.4)'; // Indigo tint
             
-            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
             particles.forEach((p, i) => {
                 p.x += p.vx;
                 p.y += p.vy;
                 
-                if (p.x < 0) p.x = width;
-                if (p.x > width) p.x = 0;
-                if (p.y < 0) p.y = height;
-                if (p.y > height) p.y = 0;
+                if (p.x < 0) p.x = w; else if (p.x > w) p.x = 0;
+                if (p.y < 0) p.y = h; else if (p.y > h) p.y = 0;
                 
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                 ctx.fill();
-                // Connections
+                
+                // Draw lines
                 for (let j = i + 1; j < particles.length; j++) {
-                    const dx = p.x - particles[j].x;
-                    const dy = p.y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
                     
-                    if (dist < 100) {
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist/1000})`;
+                    if (dist < 120) {
+                        ctx.strokeStyle = `rgba(165, 180, 252, ${0.15 - dist/800})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.lineTo(p2.x, p2.y);
                         ctx.stroke();
                     }
                 }
             });
-            requestAnimationFrame(animateParticles);
+            requestAnimationFrame(drawParticles);
         }
+        
         window.addEventListener('resize', resize);
         resize();
-        animateParticles();
-        // --- 4. Copy QQ ---
+        drawParticles();
+
+        // --- 3. QQ Copy ---
         function copyQQ() {
-            const qq = document.getElementById('qq-num').innerText;
-            navigator.clipboard.writeText(qq).then(() => {
-                const overlay = document.getElementById('copy-overlay');
-                overlay.style.opacity = '1';
-                overlay.style.pointerEvents = 'auto';
-                setTimeout(() => {
-                    overlay.style.opacity = '0';
-                    overlay.style.pointerEvents = 'none';
-                }, 1500);
+            const num = document.getElementById('qq-num').innerText;
+            navigator.clipboard.writeText(num).then(() => {
+                const toast = document.getElementById('copy-toast');
+                toast.style.opacity = 1;
+                setTimeout(() => toast.style.opacity = 0, 2000);
             });
         }
-        // --- 5. Electronic Woodfish (Merit) ---
-        // 从本地存储读取功德数，实现持久化累积
-        let merit = localStorage.getItem('woodfishMerit') ? parseInt(localStorage.getItem('woodfishMerit')) : 0;
+
+        // --- 4. Woodfish (Persistent) ---
+        let merit = parseInt(localStorage.getItem('merit_count')) || 0;
+        const meritDisplay = document.getElementById('merit-display');
         const woodfishBtn = document.getElementById('woodfish-btn');
-        const woodfishIcon = document.getElementById('woodfish-icon');
-        const meritDisplay = document.getElementById('merit-count');
-        
-        // 初始化显示功德数
         meritDisplay.innerText = merit;
-        
+
         woodfishBtn.addEventListener('click', (e) => {
             merit++;
             meritDisplay.innerText = merit;
-            // 保存到本地存储，刷新页面不丢失
-            localStorage.setItem('woodfishMerit', merit);
+            localStorage.setItem('merit_count', merit);
+
+            // Icon bounce
+            woodfishBtn.classList.remove('woodfish-active');
+            void woodfishBtn.offsetWidth;
+            woodfishBtn.classList.add('woodfish-active');
+
+            // Float Text
+            const float = document.createElement('div');
+            float.className = 'merit-float';
+            float.innerText = '功德 +1';
             
-            // Animation on icon
-            woodfishIcon.classList.remove('woodfish-click');
-            void woodfishIcon.offsetWidth; // trigger reflow
-            woodfishIcon.classList.add('woodfish-click');
-            // Floating "+1 功德" text
-            const floatText = document.createElement('div');
-            floatText.classList.add('merit-plus');
-            floatText.innerText = '功德 +1';
-            
-            // Position near click relative to button
+            // Center relative to button
             const rect = woodfishBtn.getBoundingClientRect();
-            floatText.style.left = (e.clientX - rect.left) + 'px';
-            floatText.style.top = (e.clientY - rect.top - 20) + 'px';
+            float.style.left = (rect.width / 2 - 20) + 'px';
+            float.style.top = '10px';
             
-            woodfishBtn.appendChild(floatText);
-            
-            // Cleanup
-            setTimeout(() => floatText.remove(), 1000);
+            woodfishBtn.appendChild(float);
+            setTimeout(() => float.remove(), 800);
         });
-        // --- 6. Mystery Box Logic (100条惊喜) ---
-        const modalOverlay = document.getElementById('modal-overlay');
-        const modalContent = document.getElementById('modal-content');
-        
-        const surprises = [
-            { icon: '💖', title: '系统提示', msg: '你是最棒的！即使是咸鱼也要做最咸的那一条！' },
-            { icon: '🚨', title: '警告', msg: '检测到帅气能量溢出，请注意隐蔽！' },
-            { icon: '🍜', title: '今日建议', msg: '不要想太多，去吃顿好的犒劳自己吧。' },
-            { icon: '💤', title: '状态更新', msg: '电量不足，建议立即开启睡眠模式。' },
-            { icon: '🐷', title: '官方认证', msg: '恭喜你发现了彩蛋：烧猪🐷天下第一！' },
-            { icon: '🌟', title: '好运降临', msg: '今天的你比昨天更优秀，明天的你会更耀眼！' },
-            { icon: '🍟', title: '美食预警', msg: '隔壁小孩都馋哭了，你该去吃顿炸鸡配可乐了！' },
-            { icon: '📚', title: '学习Buff', msg: '接下来的学习效率翻倍，难题都能轻松搞定！' },
-            { icon: '🎮', title: '游戏好运', msg: '今天打游戏必连胜，队友都是神仙队友！' },
-            { icon: '🌈', title: '彩虹祝福', msg: '愿你的生活像彩虹一样，五彩斑斓无烦恼！' },
-            { icon: '🐱', title: '萌宠加持', msg: '今天会遇到超可爱的小动物，治愈所有不开心！' },
-            { icon: '🎵', title: '音乐好运', msg: '随机播放的歌全是你喜欢的，耳朵享福啦！' },
-            { icon: '🌞', title: '阳光正能量', msg: '就算阴天，你的心情也像晴天一样灿烂！' },
-            { icon: '🍉', title: '夏日限定', msg: '今天吃的西瓜一定超甜，籽还特别少！' },
-            { icon: '🚗', title: '出行顺利', msg: '出门不堵车，公交地铁全赶上，一路绿灯！' },
-            { icon: '📱', title: '手机好运', msg: '手机电量永远够用，刷视频不卡顿！' },
-            { icon: '🍰', title: '甜蜜预警', msg: '会收到意想不到的小甜点，甜到心坎里！' },
-            { icon: '🌙', title: '晚安祝福', msg: '今晚一定能睡个好觉，没有噩梦只有美梦！' },
-            { icon: '⚡', title: '灵感爆发', msg: '突然想到解决难题的办法，思路超级清晰！' },
-            { icon: '🌸', title: '花开富贵', msg: '看到好看的花，心情瞬间变好，烦恼全跑掉！' },
-            { icon: '🍓', title: '水果好运', msg: '吃到的草莓又大又甜，一口一个超满足！' },
-            { icon: '🎭', title: '快乐加倍', msg: '今天会遇到超搞笑的事，笑到肚子疼！' },
-            { icon: '💡', title: '智慧闪光', msg: '你的小聪明又上线了，什么问题都难不倒你！' },
-            { icon: '🐶', title: '汪星人祝福', msg: '会被小狗主动贴贴，治愈所有坏情绪！' },
-            { icon: '🍵', title: '悠闲时光', msg: '有机会享受悠闲下午茶，慢下来感受生活！' },
-            { icon: '🚴', title: '运动好运', msg: '运动时状态超好，不累还能瘦，身材越来越棒！' },
-            { icon: '📸', title: '拍照好看', msg: '今天拍的照片都超上镜，不用P图直接发圈！' },
-            { icon: '🎁', title: '惊喜彩蛋', msg: '你被幸运女神选中，接下来会有小惊喜！' },
-            { icon: '🍕', title: '美食好运', msg: '想吃的披萨刚好有优惠，还能加双倍芝士！' },
-            { icon: '🌊', title: '治愈时刻', msg: '听到喜欢的海浪声，所有压力都烟消云散！' },
-            { icon: '🎈', title: '童趣满满', msg: '找回童年的快乐，做一件超有趣的小事！' },
-            { icon: '📝', title: '作业好运', msg: '作业少而且简单，很快就能写完去玩！' },
-            { icon: '🐇', title: '兔年好运', msg: '像小兔子一样可爱，运气也像兔子一样旺！' },
-            { icon: '🍩', title: '甜蜜暴击', msg: '吃到超好吃的甜甜圈，甜到心里开花！' },
-            { icon: '🌿', title: '清新治愈', msg: '闻到青草的香味，心情变得格外舒畅！' },
-            { icon: '🎲', title: '运气爆棚', msg: '抽奖必中，猜拳必赢，好运挡都挡不住！' },
-            { icon: '📞', title: '好友问候', msg: '很久没联系的好朋友会主动找你聊天！' },
-            { icon: '🍍', title: '热带好运', msg: '吃到超甜的菠萝，没有涩味，超满足！' },
-            { icon: '🌌', title: '星空祝福', msg: '今晚的星空超美，对着星星许愿一定会实现！' },
-            { icon: '🧸', title: '可爱加持', msg: '看到超可爱的玩偶，少女心/少年心爆棚！' },
-            { icon: '🍿', title: '观影愉快', msg: '看的电影超好看，没有烂尾，全程高能！' },
-            { icon: '🌱', title: '新生力量', msg: '像小树苗一样茁壮成长，每天都有新进步！' },
-            { icon: '🎧', title: '听觉享受', msg: '戴上耳机，全世界都是你的，超治愈！' },
-            { icon: '🍇', title: '葡萄好运', msg: '吃到的葡萄无籽还甜，一口一串超爽！' },
-            { icon: '🌤️', title: '多云转晴', msg: '就算一开始不顺利，后面也会峰回路转！' },
-            { icon: '🎪', title: '快乐嘉年华', msg: '今天的快乐像嘉年华一样，源源不断！' },
-            { icon: '📚', title: '知识增长', msg: '无意间学到超有用的知识，收获满满！' },
-            { icon: '🍎', title: '平安健康', msg: '吃个苹果，平安健康，百病不侵！' },
-            { icon: '🌠', title: '流星许愿', msg: '看到流星划过，许下的愿望很快就会实现！' },
-            { icon: '🧁', title: '甜品治愈', msg: '吃一口小蛋糕，所有不开心都烟消云散！' },
-            { icon: '🚀', title: '前程似锦', msg: '你的未来像火箭一样，一飞冲天！' },
-            { icon: '🍐', title: '顺利吉祥', msg: '万事顺利，吉祥如意，没有烦心事！' },
-            { icon: '🌙', title: '月色温柔', msg: '今晚的月色超温柔，伴你入眠到天亮！' },
-            { icon: '🎶', title: '歌声治愈', msg: '自己唱的歌超好听，被自己惊艳到了！' },
-            { icon: '🍑', title: '蜜桃好运', msg: '像水蜜桃一样甜，走到哪里都受欢迎！' },
-            { icon: '🌻', title: '向阳而生', msg: '像向日葵一样，永远向着阳光，充满正能量！' },
-            { icon: '🎮', title: '游戏神操作', msg: '今天打游戏会有超神操作，被队友夸爆！' },
-            { icon: '🍍', title: '好运连连', msg: '好事一件接一件，根本停不下来！' },
-            { icon: '🌿', title: '岁月静好', msg: '享受片刻的宁静，感受生活的美好！' },
-            { icon: '🎁', title: '隐藏惊喜', msg: '你发现了隐藏惊喜，接下来好运不断！' },
-            { icon: '🍓', title: '甜蜜生活', msg: '生活像草莓一样，酸酸甜甜超幸福！' },
-            { icon: '🌟', title: '星光闪耀', msg: '你就是最亮的星，走到哪里都发光！' },
-            { icon: '🍟', title: '快乐肥宅', msg: '今天可以安心当肥宅，快乐最重要！' },
-            { icon: '🌊', title: '心胸开阔', msg: '像大海一样心胸开阔，不被小事困扰！' },
-            { icon: '🎭', title: '百变人生', msg: '今天可以尝试新事物，体验不一样的快乐！' },
-            { icon: '💡', title: '奇思妙想', msg: '你的奇思妙想会被认可，超有成就感！' },
-            { icon: '🐱', title: '猫咪治愈', msg: '被猫咪蹭蹭，所有坏情绪都被治愈了！' },
-            { icon: '🍵', title: '静心时刻', msg: '喝杯茶静下心来，所有难题都能解决！' },
-            { icon: '🚴', title: '活力满满', msg: '运动后活力四射，做什么都有精神！' },
-            { icon: '📸', title: '记录美好', msg: '拍下超美的照片，留住生活的美好瞬间！' },
-            { icon: '🎈', title: '快乐起飞', msg: '快乐像气球一样，越飞越高！' },
-            { icon: '📝', title: '灵感涌现', msg: '写作业/画画灵感爆棚，超顺利！' },
-            { icon: '🐇', title: '幸运降临', msg: '像小兔子一样幸运，好事找上门！' },
-            { icon: '🍩', title: '圆满快乐', msg: '生活像甜甜圈一样，圆满又快乐！' },
-            { icon: '🌿', title: '清新自然', msg: '呼吸新鲜空气，感受大自然的美好！' },
-            { icon: '🎲', title: '好运连连', msg: '运气好到爆，做什么都顺顺利利！' },
-            { icon: '📞', title: '温暖问候', msg: '收到温暖的问候，心里暖暖的！' },
-            { icon: '🍍', title: '酸甜人生', msg: '人生有酸有甜，都是宝贵的体验！' },
-            { icon: '🌌', title: '宇宙浪漫', msg: '你与宇宙一样浪漫，值得所有美好！' },
-            { icon: '🧸', title: '童心未泯', msg: '保持童心，永远快乐，没有烦恼！' },
-            { icon: '🍿', title: '观影盛宴', msg: '看的电影超精彩，绝对值回票价！' },
-            { icon: '🌱', title: '茁壮成长', msg: '每天都在进步，慢慢变成更好的自己！' },
-            { icon: '🎧', title: '音乐陪伴', msg: '有音乐陪伴，孤独什么的不存在！' },
-            { icon: '🍇', title: '硕果累累', msg: '付出的努力都会有回报，硕果累累！' },
-            { icon: '🌤️', title: '心情晴朗', msg: '心情像晴天一样，没有乌云只有阳光！' },
-            { icon: '🎪', title: '快乐无限', msg: '快乐没有上限，今天的你超快乐！' },
-            { icon: '📚', title: '书香为伴', msg: '在书的世界里遨游，收获知识与快乐！' },
-            { icon: '🍎', title: '平安喜乐', msg: '平安喜乐，万事顺意，天天开心！' },
-            { icon: '🌠', title: '梦想起航', msg: '向着梦想出发，一定会到达目的地！' },
-            { icon: '🧁', title: '甜蜜加倍', msg: '甜蜜的事情发生，快乐加倍！' },
-            { icon: '🚀', title: '乘风破浪', msg: '勇敢乘风破浪，没有什么能阻挡你！' },
-            { icon: '🍐', title: '吉祥如意', msg: '吉祥如意，好运连连，福气满满！' },
-            { icon: '🌙', title: '晚安好梦', msg: '晚安，做个甜甜的梦，明天又是美好的一天！' },
-            { icon: '🎶', title: '歌声飞扬', msg: '歌声飞扬，快乐无限，超享受！' },
-            { icon: '🍑', title: '可爱无敌', msg: '你超可爱，所有人都喜欢你！' },
-            { icon: '🌻', title: '积极向上', msg: '积极向上，充满正能量，感染身边的人！' },
-            { icon: '🎮', title: '游戏胜利', msg: '游戏大获全胜，奖励拿到手软！' },
-            { icon: '🍍', title: '好运相伴', msg: '好运一直相伴，从不离开！' },
-            { icon: '🌿', title: '岁月静好', msg: '岁月静好，现世安稳，幸福美满！' },
-            { icon: '🎁', title: '终极彩蛋', msg: '恭喜解锁终极彩蛋！烧猪🐷的粉丝都是天选之子！' }
-        ];
-        function openMysteryBox() {
-            const item = surprises[Math.floor(Math.random() * surprises.length)];
-            document.getElementById('modal-icon').innerText = item.icon;
-            document.getElementById('modal-title').innerText = item.title;
-            document.getElementById('modal-msg').innerText = item.msg;
+
+        // --- 5. Life Progress ---
+        function updateProgress() {
+            const now = new Date();
             
-            modalOverlay.classList.remove('hidden');
-            // slight delay to allow display:block to apply before opacity transition
-            setTimeout(() => {
-                modalOverlay.style.opacity = '1';
-                modalContent.style.transform = 'scale(1)';
-            }, 10);
+            // Day Progress
+            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const msPassed = now - startOfDay;
+            const dayPct = Math.min(100, (msPassed / (24 * 60 * 60 * 1000)) * 100).toFixed(1);
+            document.getElementById('day-bar').style.width = dayPct + '%';
+            document.getElementById('day-pct').innerText = dayPct + '%';
+
+            // Year Progress
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const endOfYear = new Date(now.getFullYear() + 1, 0, 1);
+            const yearPct = Math.min(100, ((now - startOfYear) / (endOfYear - startOfYear)) * 100).toFixed(1);
+            document.getElementById('year-bar').style.width = yearPct + '%';
+            document.getElementById('year-pct').innerText = yearPct + '%';
         }
+        setTimeout(updateProgress, 500); // Delay for visual effect
+
+        // --- 6. Daily Luck ---
+        function checkLuck() {
+            const lucks = [
+                {t:'大吉', c:'text-red-500'}, {t:'中吉', c:'text-orange-400'}, 
+                {t:'小吉', c:'text-yellow-400'}, {t:'平', c:'text-blue-300'}, 
+                {t:'凶', c:'text-slate-400'}, {t:'大凶', c:'text-gray-500'}
+            ];
+            // Pseudo-random based on date to keep it same for the day
+            const dateStr = new Date().toDateString();
+            let hash = 0;
+            for(let i=0; i<dateStr.length; i++) hash = dateStr.charCodeAt(i) + ((hash << 5) - hash);
+            
+            const index = Math.abs(hash) % lucks.length;
+            const res = lucks[index];
+            
+            const el = document.getElementById('luck-text');
+            el.innerText = res.t;
+            el.className = `text-lg font-bold mt-1 ${res.c}`;
+            document.getElementById('luck-icon').classList.add('fa-spin');
+            setTimeout(() => document.getElementById('luck-icon').classList.remove('fa-spin'), 500);
+        }
+
+        // --- 7. Massive Surprise List (150 items) ---
+        const surpriseList = [
+            // Compliments
+            {i:'💖', t:'夸夸', m:'你今天的发型看起来真的很不错！'},
+            {i:'🌟', t:'夸夸', m:'你的眼睛里有星星，真的。'},
+            {i:'🔥', t:'状态', m:'现在的你简直魅力值爆表。'},
+            {i:'👍', t:'肯定', m:'虽然你自称废柴，但我觉得你潜力无限。'},
+            {i:'👑', t:'认证', m:'经系统检测，你是本站最尊贵的访客。'},
+            {i:'🧠', t:'事实', m:'你的智商超过了全国90%的咸鱼。'},
+            {i:'🌈', t:'运气', m:'看到这条消息，明天会有好事发生。'},
+            {i:'🎸', t:'风格', m:'你的品味真的很独特，我是说好的那种。'},
+            {i:'🍬', t:'甜度', m:'你比全糖奶茶还要甜。'},
+            {i:'🚀', t:'未来', m:'初中只是起点，你的征途是星辰大海。'},
+            
+            // Pranks / Jokes
+            {i:'🐷', t:'警告', m:'检测到同类信号... 既然都是烧猪，握个爪吧。'},
+            {i:'🚨', t:'警报', m:'因颜值过高，你的设备正在过热。'},
+            {i:'🔋', t:'电量', m:'你的社交能量已不足1%，请立即进入睡眠模式。'},
+            {i:'🛠️', t:'Bug', m:'系统崩溃了... 骗你的，嘿嘿。'},
+            {i:'👽', t:'信号', m:'正在尝试联系外星人接你回母星... 失败了。'},
+            {i:'🚽', t:'建议', m:'带薪拉屎是初中生不该有的想法，去学习！'},
+            {i:'🥦', t:'健康', m:'多吃蔬菜，不然会变成真的猪哦。'},
+            {i:'📱', t:'监控', m:'别看了，作业写完了吗？'},
+            {i:'👓', t:'真相', m:'其实... 我知道你昨天晚上几点睡的。'},
+            {i:'💔', t:'扎心', m:'假期余额正在以惊人的速度减少。'},
+
+            // Tech/Geek
+            {i:'💻', t:'代码', m:'Hello World! 世界因你而不同。'},
+            {i:'⌨️', t:'设备', m:'你的键盘需要清理了。'},
+            {i:'🖱️', t:'操作', m:'你的APM（手速）看起来很高啊。'},
+            {i:'🧊', t:'散热', m:'心静自然凉，但电脑需要风扇。'},
+            {i:'📡', t:'网络', m:'你的网速快得像闪电，思维也是。'},
+            
+            // Daily Life
+            {i:'🍜', t:'吃啥', m:'别纠结了，去吃顿好的。'},
+            {i:'🥤', t:'喝啥', m:'今天宜喝可乐，百事可乐。'},
+            {i:'💤', t:'休息', m:'再玩5分钟就去睡觉吧，乖。'},
+            {i:'📚', t:'学习', m:'这就是传说中的“量子波动速读”法吗？'},
+            {i:'🌞', t:'天气', m:'不管外面天气如何，心里要是晴天。'},
+
+            // (Generating more to simulate 150 items logic - I will use a generator function to fill the rest in display to save file size but for the array I will duplicate logic slightly to ensure randomness if index is huge)
+        ];
+
+        // Programmatically expand the list to 150+ for the user's request
+        const extraPhrases = [
+            "保持热爱，奔赴山海。", "星光不问赶路人。", "生活原本沉闷，但跑起来就有风。",
+            "既然选择了远方，便只顾风雨兼程。", "你最好看。", "今天要开心。",
+            "记得喝水。", "不要熬夜。", "冲鸭！", "奥利给！", 
+            "YYDS!", "绝绝子。", "摸鱼快乐。", "躺平也是一种态度。",
+            "内卷是不可能内卷的。", "学习使我快乐（假的）。", "想养一只猫。",
+            "今天也是充满希望的一天。", "在这个年纪，你的迷茫很正常。", "相信光。",
+            "迪迦奥特曼在看着你。", "不管是黑猫白猫，能抓老鼠就是好猫。",
+            "你是最胖的... 啊不对，最棒的。", "减肥是明天的事。",
+            "奶茶续命。", "WiFi信号满格是最幸福的事。", "手机电量100%很有安全感。",
+            "别低头，皇冠会掉。", "别流泪，坏人会笑。", "做一个俗人，贪财好色。",
+            "钱途无量。", "暴富暴瘦。", "锦鲤附体。", "水逆退散。",
+            "诸事皆宜。", "百无禁忌。", "大吉大利，今晚吃鸡。",
+            "峡谷见。", "带飞吗？", "又菜又爱玩。", "我是个没有感情的杀手。",
+            "作业写了吗？", "考试稳过。", "逢考必过。", "学神附体。",
+            "蒙的全对。", "会的全会。", "班主任在窗户后面。", "下课别走。",
+            "放学奶茶店见。", "周末去哪玩？", "补作业中...", "沉迷学习，日渐消瘦。",
+            "这题我会！", "这题超纲了。", "我想静静。", "主要看气质。",
+            "这就很尴尬了。", "真香定律。", "人类的本质是复读机。",
+            "打工人打工魂。", "干饭人干饭魂。", "干饭不积极，思想有问题。",
+            "为了干饭，冲啊！", "只有干饭才能让我快乐。", "今天中午吃红烧肉。",
+            "麻辣烫约吗？", "火锅底料。", "螺蛳粉真香。", "臭豆腐。",
+            "在此刻，你就是主角。", "哪怕是咸鱼，也要做最咸的那条。",
+            "翻身... 还是咸鱼。", "但是粘锅了。", "有点焦了。",
+            "这就是青春啊。", "非主流勿扰。", "葬爱家族。", "火星文。",
+            "网抑云时间。", "生而为人，我很抱歉。", "开玩笑的，我很开心。",
+            "Eternity.", "Serendipity.", "Limerence.", "Petrichor.",
+            "科技改变生活。", "代码改变世界。", "而你改变了我。",
+            "土味情话来一句？", "你的背心好重，因为背负了我的爱。", "别笑了，我心都化了。",
+            "你是什么座？", "你是我的量身定做。", "苦海无涯，回头是我。",
+            "最近有谣言说我喜欢你。", "我要澄清一下，那不是谣言。",
+            "你猜我的心在哪边？", "在你那边。", "你会弹吉他吗？", "那你怎么拨动了我的心弦？",
+            "有点冷。", "抱抱。", "摸摸头。", "举高高。",
+            "确认过眼神。", "遇上对的人。", "我们不一样。", "燃烧我的卡路里。",
+            "好嗨哟。", "感觉人生已经到达了高潮。", "来了老弟。",
+            "真皮沙发。", "蒂花之秀。", "陈独秀。", "优秀的秀。",
+            "一顿操作猛如虎。", "一看战绩0-5。", "这就是大佬的世界吗？",
+            "萌新瑟瑟发抖。", "大佬带带我。", "666。", "2333。",
+            "红红火火恍恍惚惚。", "笑死我了。", "笑出猪叫。", "今日份快乐源泉。"
+        ];
+
+        // Combine to ensure > 150
+        extraPhrases.forEach(phrase => {
+            surpriseList.push({
+                i: ['🎉','🎈','💡','👻','🐱','🐶','🍕','🍔','🍟'][Math.floor(Math.random()*9)],
+                t: '随机掉落',
+                m: phrase
+            });
+        });
+
+        function openMysteryBox() {
+            const item = surpriseList[Math.floor(Math.random() * surpriseList.length)];
+            
+            document.getElementById('modal-icon').innerText = item.i;
+            document.getElementById('modal-title').innerText = item.t;
+            document.getElementById('modal-msg').innerText = item.m;
+
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            
+            overlay.classList.remove('hidden');
+            // slight delay for CSS transition
+            requestAnimationFrame(() => {
+                overlay.style.opacity = 1;
+                content.style.transform = 'scale(1)';
+            });
+        }
+
         function closeModal() {
-            modalOverlay.style.opacity = '0';
-            modalContent.style.transform = 'scale(0.9)';
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            
+            overlay.style.opacity = 0;
+            content.style.transform = 'scale(0.9)';
+            
             setTimeout(() => {
-                modalOverlay.classList.add('hidden');
+                overlay.classList.add('hidden');
             }, 300);
         }
-        // --- 7. Compliment Generator (100条夸夸) ---
-        const compliments = [
-            "你的发际线还能再战五百年！",
-            "你今天的穿搭简直就是时尚界的教科书。",
-            "虽然你自称废柴，但你独特的幽默感是无价之宝。",
-            "如果是智商税的话，你肯定一分钱都不用交。",
-            "你的声音好听到可以让耳朵怀孕。",
-            "你怎么长得这么随心所欲还这么好看？",
-            "看到你，我的心情就像喝了全糖奶茶一样甜。",
-            "你的脑洞比宇宙还大，太有创意了！",
-            "就算是摸鱼，你也是最帅的摸鱼人！",
-            "你的笑容比阳光还耀眼，治愈所有不开心。",
-            "这么可爱/帅气的你，一定是上天派来的小天使吧！",
-            "你的审美绝了，选的东西都超有品味！",
-            "虽然是初中生，但你的心态比成年人还成熟稳重。",
-            "你说话的方式超有趣，听你聊天根本不会无聊。",
-            "就算是普通的初中生，你也是最特别的那一个！",
-            "你的动手能力超强，什么东西到你手里都能搞定。",
-            "你对朋友超仗义，能和你做朋友太幸运了！",
-            "你的眼睛超有神，像藏着星星一样闪亮。",
-            "就算躺平，你也是躺平界的天花板！",
-            "你的学习能力超强，一点就通，太聪明了！",
-            "你笑起来的时候，整个世界都变温柔了。",
-            "你选的表情包都超有梗，太懂我了！",
-            "虽然自称废柴，但你比很多人都优秀多了。",
-            "你的性格超讨喜，谁见了都会喜欢你。",
-            "你唱歌/画画/写字超好看，太有才华了！",
-            "你对待事情超认真，这种态度太让人佩服了。",
-            "你的运气一直都很好，果然是天选之子！",
-            "你穿校服都这么好看，简直是行走的衣架。",
-            "你很会安慰人，和你聊天超治愈。",
-            "就算是摸鱼，你也摸得很有格调！",
-            "你的逻辑思维超清晰，说话条理分明。",
-            "你对新鲜事物的接受度超高，太酷了！",
-            "你笑起来有两个小梨涡，太可爱了吧！",
-            "你做的决定都很明智，太有主见了。",
-            "你的反应速度超快，简直是反应小能手！",
-            "你很会照顾别人的情绪，超暖心。",
-            "就算是简单的日常，被你分享出来也超有趣。",
-            "你的记忆力超好，什么事情都记得清清楚楚。",
-            "你很有幽默感，总能逗得大家哈哈大笑。",
-            "你对待朋友超真诚，这样的朋友太难得了。",
-            "你的运动细胞超发达，打球/跑步都超厉害！",
-            "你写的作业超工整，老师看了都喜欢。",
-            "你很有耐心，就算遇到难题也不慌不忙。",
-            "你的穿搭简约又时尚，太会穿了！",
-            "你很有责任心，交给你的事情一定能做好。",
-            "你笑起来的时候，眼睛弯弯的像月牙，超可爱。",
-            "你对美食的品味超棒，推荐的东西都超好吃。",
-            "你很懂礼貌，待人接物都很得体。",
-            "就算是不开心，你也能很快调整好心态，超厉害。",
-            "你的手工超精致，简直是心灵手巧！",
-            "你很有正义感，看到不对的事情会勇敢站出来。",
-            "你说话的声音软软的，超好听。",
-            "你很会规划时间，学习和玩都不耽误。",
-            "你的颜值和才华并存，太让人羡慕了！",
-            "你很谦虚，就算很优秀也不骄傲。",
-            "你笑起来超有感染力，身边的人都能被你带动。",
-            "你对游戏的理解超深，玩得超厉害！",
-            "你很有爱心，喜欢小动物，超善良。",
-            "你的字写得超好看，像印刷体一样。",
-            "你很会聊天，就算是陌生人也能聊得很投机。",
-            "你很有毅力，做事情从不半途而废。",
-            "你笑起来的时候，整个空气都变甜了。",
-            "你对音乐的品味超棒，推荐的歌都超好听。",
-            "你很勇敢，遇到困难从不退缩。",
-            "你的皮肤超好，白里透红，太让人羡慕了。",
-            "你很会开玩笑，而且玩笑开得恰到好处。",
-            "你很有想象力，脑子里有很多奇思妙想。",
-            "你对待学习很认真，成绩一定不会差！",
-            "你笑起来超阳光，像小太阳一样温暖。",
-            "你很会搭配，就算是简单的衣服也能穿出高级感。",
-            "你很有同理心，总能站在别人的角度想问题。",
-            "你的节奏感超好，唱歌/跳舞都超有范儿。",
-            "你很细心，总能发现别人忽略的小细节。",
-            "你笑起来的时候，牙齿白白的，超好看。",
-            "你很有冒险精神，喜欢尝试新事物。",
-            "你的数学/语文/英语超厉害，简直是学霸！",
-            "你很会安慰人，几句话就能让人心情变好。",
-            "你很有气质，就算不说话也很吸引人。",
-            "你的画画超好看，像专业画家一样。",
-            "你很懂生活，把日子过得超有仪式感。",
-            "你笑起来超治愈，所有烦恼都能烟消云散。",
-            "你很有团队精神，和同学合作超默契。",
-            "你的口才超棒，说话超有说服力。",
-            "你很会省钱，但该花的钱也绝不吝啬。",
-            "你笑起来的时候，眼睛里有星星，超迷人。",
-            "你很有创造力，总能想出不一样的点子。",
-            "你的体育超棒，运动会一定能拿奖！",
-            "你很有礼貌，见到老师/同学都会主动打招呼。",
-            "你很会做饭，做的饭超好吃！",
-            "你笑起来超可爱，让人忍不住想捏你的脸。",
-            "你很有责任感，是老师/同学都信赖的人。",
-            "你的英语发音超标准，像 native speaker 一样！",
-            "你很会穿搭，就算是校服也能穿出不一样的感觉。",
-            "你很有耐心，教别人东西超认真。",
-            "你笑起来的时候，超有亲和力，让人想亲近你。",
-            "你很有正义感，是个充满正能量的人。",
-            "你的手工超有创意，太厉害了！",
-            "你很会规划，做事情有条不紊。",
-            "你笑起来超甜，像糖果一样甜到心里。",
-            "你很有才华，琴棋书画样样精通！",
-            "你很懂朋友，知道朋友需要什么。",
-            "你的反应超快，不管是学习还是玩游戏都超厉害。",
-            "你笑起来的时候，超有感染力，身边的人都能开心起来。",
-            "你很有主见，不会轻易被别人影响。",
-            "你的颜值太高了，简直是初中生中的颜值天花板！",
-            "你很会照顾自己，把自己打理得超好。",
-            "你笑起来的时候，超治愈，所有不开心都能被赶走。",
-            "你很有毅力，就算遇到挫折也不放弃。",
-            "你的学习方法超棒，效率超高！",
-            "你很有爱心，经常帮助别人，超善良。",
-            "你笑起来的时候，超可爱，让人一眼就喜欢上你。",
-            "你很有品味，不管是穿搭还是爱好都超有格调。",
-            "你的性格超开朗，像小太阳一样温暖所有人。"
-        ];
-        function generateFart() {
-            const text = compliments[Math.floor(Math.random() * compliments.length)];
-            const display = document.getElementById('fart-display');
-            const p = document.getElementById('fart-text');
-            
-            display.classList.remove('hidden');
-            display.classList.add('animate-pulse');
-            setTimeout(() => display.classList.remove('animate-pulse'), 500);
-            
-            p.innerText = text;
-            document.getElementById('fart-preview').innerText = "已生成，请查收 ↓";
-        }
+
     </script>
 </body>
 </html>
