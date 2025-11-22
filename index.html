@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Future Tech Blog</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #050505;
+            --card-bg: rgba(20, 20, 30, 0.7);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, .tech-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-cyan);
+        }
+
+        /* Background Animation */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+        }
+
+        /* Neon Glow Effects */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+        .border-glow {
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+        }
+        
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        /* Glitch Effect for Logo */
+        .glitch {
+            position: relative;
+            color: white;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(34px, 9999px, 11px, 0); }
+            20% { clip: rect(68px, 9999px, 89px, 0); }
+            40% { clip: rect(15px, 9999px, 98px, 0); }
+            60% { clip: rect(2px, 9999px, 23px, 0); }
+            80% { clip: rect(55px, 9999px, 14px, 0); }
+            100% { clip: rect(84px, 9999px, 76px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(63px, 9999px, 68px, 0); }
+            20% { clip: rect(19px, 9999px, 5px, 0); }
+            40% { clip: rect(48px, 9999px, 78px, 0); }
+            60% { clip: rect(94px, 9999px, 1px, 0); }
+            80% { clip: rect(3px, 9999px, 35px, 0); }
+            100% { clip: rect(26px, 9999px, 93px, 0); }
+        }
+
+        /* Typing Cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-start infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Reveal on Scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Angled Button */
+        .clip-path-polygon {
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        /* Typewriter Effect */
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid var(--neon-cyan);
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--neon-cyan); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- Dynamic Background -->
+    <div id="canvas-container">
+        <canvas id="starfield"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 left-0 border-b border-white/10 backdrop-blur-md bg-black/50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl font-bold tech-font tracking-widest glitch" data-text="NEXUS">NEXUS</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="text-gray-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group">
+                            <span>HOME</span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+                        <a href="#articles" class="text-gray-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group">
+                            <span>ARTICLES</span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+                        <a href="#about" class="text-gray-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group">
+                            <span>ABOUT</span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+                        <a href="#contact" class="text-gray-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group">
+                            <span>CONTACT</span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" class="text-gray-400 hover:text-white focus:outline-none" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden bg-black/90 border-b border-white/10" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="text-gray-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">HOME</a>
+                <a href="#articles" class="text-gray-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">ARTICLES</a>
+                <a href="#about" class="text-gray-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">ABOUT</a>
+                <a href="#contact" class="text-gray-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">CONTACT</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-1/4 left-10 w-24 h-24 border-l-2 border-t-2 border-cyan-500/30 rounded-tl-3xl"></div>
+        <div class="absolute bottom-1/4 right-10 w-24 h-24 border-r-2 border-b-2 border-purple-500/30 rounded-br-3xl"></div>
+        
+        <div class="text-center z-10 px-4 max-w-4xl">
+            <div class="mb-4 inline-block px-4 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs tracking-widest uppercase tech-font reveal">
+                <span class="typewriter block">System Online v2.0.4</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight reveal" style="transition-delay: 100ms;">
+                <span class="block text-white">DECODING THE</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 text-glow">FUTURE</span>
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed reveal" style="transition-delay: 200ms;">
+                Exploring the digital frontier where <span class="text-cyan-300">artificial intelligence</span>, <span class="text-purple-300">cybernetics</span>, and <span class="text-blue-300">human consciousness</span> converge.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center reveal" style="transition-delay: 300ms;">
+                <a href="#articles" class="px-8 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-sm tech-font tracking-wider transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] clip-path-polygon">
+                    START READING
+                </a>
+                <a href="#about" class="px-8 py-4 bg-transparent border border-white/20 hover:border-purple-500 hover:text-purple-400 text-gray-300 font-bold rounded-sm tech-font tracking-wider transition-all">
+                    ACCESS DATA
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#articles" class="text-gray-500 hover:text-cyan-400 transition-colors">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Articles Section -->
+    <section id="articles" class="py-20 px-4 md:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between mb-12 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white border-l-4 border-cyan-500 pl-4">
+                    LATEST <span class="text-cyan-400">TRANSMISSIONS</span>
+                </h2>
+                <div class="hidden md:block h-px bg-white/10 flex-grow ml-8"></div>
+                <div class="hidden md:block text-cyan-500/50 tech-font text-sm ml-4">LOG_ID: 8842</div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Article 1 -->
+                <article class="glass-card rounded-xl overflow-hidden reveal group">
+                    <div class="relative h-48 bg-gray-800 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1535378437268-13d143c02846?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="AI Consciousness" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100">
+                        <div class="absolute top-4 left-4 z-20 bg-black/70 backdrop-blur-sm px-3 py-1 border border-cyan-500/30 rounded text-xs text-cyan-400 font-mono">
+                            AI / ETHICS
+                        </div>
+                    </div>
+                    <div class="p-6 relative">
+                        <div class="absolute -top-10 right-6 z-20 w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center border border-white/10 group-hover:border-cyan-500 transition-colors shadow-lg">
+                            <i class="fas fa-microchip text-cyan-400"></i>
+                        </div>
+                        <div class="text-gray-500 text-xs mb-2 font-mono">DATE: 2084.11.02</div>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">The Ghost in the Machine</h3>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                            Analyzing the emergent properties of neural networks when they exceed the critical complexity threshold. Are we building tools or birthing gods?
+                        </p>
+                        <a href="#" class="inline-flex items-center text-cyan-400 text-sm font-bold hover:text-purple-400 transition-colors">
+                            READ DATA <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="glass-card rounded-xl overflow-hidden reveal group" style="transition-delay: 100ms;">
+                    <div class="relative h-48 bg-gray-800 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1515630278258-407f66498911?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Cybernetics" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100">
+                        <div class="absolute top-4 left-4 z-20 bg-black/70 backdrop-blur-sm px-3 py-1 border border-purple-500/30 rounded text-xs text-purple-400 font-mono">
+                            CYBERNETICS
+                        </div>
+                    </div>
+                    <div class="p-6 relative">
+                        <div class="absolute -top-10 right-6 z-20 w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center border border-white/10 group-hover:border-purple-500 transition-colors shadow-lg">
+                            <i class="fas fa-hand-sparkles text-purple-400"></i>
+                        </div>
+                        <div class="text-gray-500 text-xs mb-2 font-mono">DATE: 2084.10.24</div>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">Beyond Flesh and Bone</h3>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                            The latest advancements in neural interfaces allow for seamless integration between biological synapses and silicon chips. The era of homo-technologicus is here.
+                        </p>
+                        <a href="#" class="inline-flex items-center text-purple-400 text-sm font-bold hover:text-cyan-400 transition-colors">
+                            READ DATA <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Article 3 -->
+                <article class="glass-card rounded-xl overflow-hidden reveal group" style="transition-delay: 200ms;">
+                    <div class="relative h-48 bg-gray-800 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Space Tech" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100">
+                        <div class="absolute top-4 left-4 z-20 bg-black/70 backdrop-blur-sm px-3 py-1 border border-cyan-500/30 rounded text-xs text-cyan-400 font-mono">
+                            SPACE
+                        </div>
+                    </div>
+                    <div class="p-6 relative">
+                        <div class="absolute -top-10 right-6 z-20 w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center border border-white/10 group-hover:border-cyan-500 transition-colors shadow-lg">
+                            <i class="fas fa-satellite text-cyan-400"></i>
+                        </div>
+                        <div class="text-gray-500 text-xs mb-2 font-mono">DATE: 2084.10.15</div>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">Terraforming Mars</h3>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                            Atmospheric processors have finally stabilized the Red Planet's climate. Here's what the first generation of Martian colonists can expect.
+                        </p>
+                        <a href="#" class="inline-flex items-center text-cyan-400 text-sm font-bold hover:text-purple-400 transition-colors">
+                            READ DATA <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-4 md:px-8 relative bg-black/40">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <div class="flex items-center mb-6">
+                        <span class="text-cyan-500 text-4xl mr-4"><i class="fas fa-fingerprint"></i></span>
+                        <h2 class="text-3xl md:text-4xl font-bold text-white">
+                            AUTHOR <span class="text-purple-500">PROFILE</span>
+                        </h2>
+                    </div>
+                    <p class="text-gray-300 text-lg mb-6 leading-relaxed">
+                        I am a digital archivist and technologist obsessed with the singularity. My work documents the rapid evolution of human-machine interfaces and the ethical dilemmas of our post-biological future.
+                    </p>
+                    <p class="text-gray-400 mb-8">
+                        Operating from Node 42 of the decentralized web, I curate data streams that matter. Whether it's quantum computing breakthroughs or the sociology of virtual worlds, you'll find it decoded here.
+                    </p>
+                    
+                    <!-- Stats/Skills -->
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-cyan-400 text-sm font-mono tracking-widest">CYBERSECURITY</span>
+                                <span class="text-white text-sm font-mono">98%</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 w-[98%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-purple-400 text-sm font-mono tracking-widest">AI INTEGRATION</span>
+                                <span class="text-white text-sm font-mono">85%</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 w-[85%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-blue-400 text-sm font-mono tracking-widest">DATA SYNTHESIS</span>
+                                <span class="text-white text-sm font-mono">92%</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 w-[92%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative reveal" style="transition-delay: 200ms;">
+                    <!-- Profile Image Container with Glitch Border -->
+                    <div class="relative border border-white/20 p-2 rounded-sm">
+                        <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-500"></div>
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-purple-500"></div>
+                        <div class="absolute top-1/2 -left-2 w-1 h-10 bg-cyan-500/50"></div>
+                        
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Profile" class="w-full h-auto grayscale hover:grayscale-0 transition-all duration-500">
+                        
+                        <!-- Holographic Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-cyan-500/20 to-transparent opacity-30 pointer-events-none"></div>
+                        <div class="absolute bottom-0 left-0 w-full h-1 bg-cyan-500/50 shadow-[0_0_10px_rgba(0,243,255,0.8)] animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4 md:px-8 relative">
+        <div class="max-w-3xl mx-auto text-center mb-12 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                INITIATE <span class="text-cyan-400">COMMUNICATION</span>
+            </h2>
+            <p class="text-gray-400">Encrypted channel secure. Transmission ready.</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto glass-card p-8 md:p-12 rounded-2xl reveal">
+            <form class="space-y-6" onsubmit="event.preventDefault();">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="relative group">
+                        <input type="text" id="name" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 rounded focus:outline-none focus:border-cyan-500 transition-colors peer" placeholder=" ">
+                        <label for="name" class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-6 peer-focus:text-cyan-400 peer-focus:text-xs peer-not-placeholder-shown:-top-6 peer-not-placeholder-shown:text-cyan-400 peer-not-placeholder-shown:text-xs pointer-events-none">CODENAME</label>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 peer-focus:w-full"></div>
+                    </div>
+                    <div class="relative group">
+                        <input type="email" id="email" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 rounded focus:outline-none focus:border-cyan-500 transition-colors peer" placeholder=" ">
+                        <label for="email" class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-6 peer-focus:text-cyan-400 peer-focus:text-xs peer-not-placeholder-shown:-top-6 peer-not-placeholder-shown:text-cyan-400 peer-not-placeholder-shown:text-xs pointer-events-none">FREQUENCY (EMAIL)</label>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 peer-focus:w-full"></div>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <textarea id="message" rows="4" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 rounded focus:outline-none focus:border-cyan-500 transition-colors peer" placeholder=" "></textarea>
+                    <label for="message" class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-6 peer-focus:text-cyan-400 peer-focus:text-xs peer-not-placeholder-shown:-top-6 peer-not-placeholder-shown:text-cyan-400 peer-not-placeholder-shown:text-xs pointer-events-none">TRANSMISSION DATA</label>
+                    <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 peer-focus:w-full"></div>
+                </div>
+                <div class="text-right">
+                    <button type="submit" class="bg-cyan-600/80 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-sm tech-font tracking-widest transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] flex items-center ml-auto group">
+                        SEND PACKET <i class="fas fa-paper-plane ml-3 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-black py-10">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0 text-center md:text-left">
+                <a href="#" class="text-2xl font-bold tech-font tracking-widest text-white mb-2 block">NEXUS</a>
+                <p class="text-gray-500 text-sm">© 2084 NEXUS Digital Frontier. All systems nominal.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors"><i class="fab fa-github text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i class="fab fa-linkedin text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+            
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', revealOnScroll);
+        // Trigger once on load
+        revealOnScroll();
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black/80', 'backdrop-blur-md', 'py-0');
+                navbar.classList.remove('bg-transparent', 'py-4');
+            } else {
+                // navbar.classList.remove('bg-black/80', 'backdrop-blur-md', 'py-0');
+                // navbar.classList.add('bg-transparent', 'py-4');
+                // Keeping it consistent for this design
+            }
+        });
+
+        // Canvas Starfield Animation
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let stars = [];
+        const numStars = 200;
+
+        const resize = () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        };
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.z = Math.random() * width;
+                this.size = Math.random() * 2;
+                this.speed = Math.random() * 0.5 + 0.1;
+            }
+
+            update() {
+                this.z -= this.speed * 2;
+                if (this.z <= 0) {
+                    this.z = width;
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                }
+            }
+
+            draw() {
+                const x = (this.x - width / 2) * (width / this.z) + width / 2;
+                const y = (this.y - height / 2) * (width / this.z) + height / 2;
+                const s = this.size * (width / this.z);
+
+                ctx.beginPath();
+                ctx.fillStyle = "rgba(255, 255, 255, " + (1 - this.z / width) + ")";
+                ctx.arc(x, y, s < 0 ? 0 : s, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const initStars = () => {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push(new Star());
+            }
+        };
+
+        const animate = () => {
+            ctx.fillStyle = "rgba(5, 5, 5, 0.2)"; // Trail effect
+            ctx.fillRect(0, 0, width, height);
+            
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        };
+
+        window.addEventListener('resize', () => {
+            resize();
+            initStars();
+        });
+
+        resize();
+        initStars();
+        animate();
+    </script>
+</body>
+</html>
